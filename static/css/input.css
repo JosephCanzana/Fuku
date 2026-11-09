@@ -19,29 +19,31 @@
     --font-main: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-    /* Surfaces */
-    --color-main: #17141f;
-    --color-surface: #211c2b;
-    --color-surface-muted: #2b2537;
+    /* 60% — Main surfaces */
+    --color-main: #15191c;
+    --color-surface: #1d2327;
+    --color-surface-muted: #242b30;
 
     /* Text */
-    --color-txt-primary: #f2edf8;
-    --color-txt-secondary: #c1b8d0;
-    --color-txt-on-accent: #ffffff;
+    --color-txt-primary: #f3f6f5;
+    --color-txt-secondary: #a7b2b0;
+    --color-txt-on-accent: #10201d;
 
     /* Lines */
-    --color-border: #494056;
-    --color-ring: #b99ae8;
+    --color-border: #394247;
+    --color-ring: #65d6c2;
 
-    /* Brand */
-    --color-accent: #a77ad8;
-    --color-accent-hover: #bd96e8;
-    --color-hover: #3c304d;
+    /* 30% — Supporting surfaces */
+    --color-hover: #303a3f;
+
+    /* 10% — Accent */
+    --color-accent: #65d6c2;
+    --color-accent-hover: #83e2d1;
 
     /* Status */
-    --color-success: #66c58b;
-    --color-warning: #e6b45f;
-    --color-danger: #f08075;
+    --color-success: #65c98d;
+    --color-warning: #e8b75f;
+    --color-danger: #ee7777;
 
     /* Radius */
     --radius-sm: 0.25rem;
