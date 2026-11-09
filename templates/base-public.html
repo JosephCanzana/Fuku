@@ -4,6 +4,8 @@
 
 {% block base %}
     {% include "includes/navbar.html" %}
-    {% block content %}
-    {% endblock %}
+    <div class="flex mx-auto max-w-7xl">
+        {% block content %}
+        {% endblock %}
+    </div>
 {% endblock %}

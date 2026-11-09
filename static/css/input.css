@@ -15,33 +15,33 @@
 }
 
 @theme {
-    /* Fonts (add @font-face or a font link first) */
+    /* Fonts */
     --font-main: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
     /* Surfaces */
-    --color-main: #e5eaf5;
-    --color-surface: #ffffff;
-    --color-surface-muted: #f3f5fb;
+    --color-main: #17141f;
+    --color-surface: #211c2b;
+    --color-surface-muted: #2b2537;
 
     /* Text */
-    --color-txt-primary: #2a1f3d;
-    --color-txt-secondary: #5b5470;
+    --color-txt-primary: #f2edf8;
+    --color-txt-secondary: #c1b8d0;
     --color-txt-on-accent: #ffffff;
 
     /* Lines */
-    --color-border: #c9cfe3;
-    --color-ring: #8458b3; 
+    --color-border: #494056;
+    --color-ring: #b99ae8;
 
     /* Brand */
-    --color-accent: #8458b3;
-    --color-accent-hover: #6f4799;
-    --color-hover: #d0bdf4;
+    --color-accent: #a77ad8;
+    --color-accent-hover: #bd96e8;
+    --color-hover: #3c304d;
 
     /* Status */
-    --color-success: #25784b;
-    --color-warning: #9a6212;
-    --color-danger: #c0392b;
+    --color-success: #66c58b;
+    --color-warning: #e6b45f;
+    --color-danger: #f08075;
 
     /* Radius */
     --radius-sm: 0.25rem;
