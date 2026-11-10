@@ -3,9 +3,11 @@
 {% block title %}Public{% endblock %}
 
 {% block base %}
-    {% include "includes/navbar.html" %}
-    <div class="flex mx-auto max-w-7xl">
-        {% block content %}
-        {% endblock %}
+    <div class="flex h-dvh flex-col">
+        {% include "includes/navbar.html" %}
+        <div class="mx-auto flex w-full max-w-7xl flex-1 min-h-0">
+            {% block content %}
+            {% endblock %}
+        </div>
     </div>
 {% endblock %}

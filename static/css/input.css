@@ -17,36 +17,56 @@
 @theme {
     /* Fonts */
     --font-main: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-mono: "Roboto Mono", ui-monospace, monospace;
 
     /* 60% — Main surfaces */
-    --color-main: #15191c;
-    --color-surface: #1d2327;
-    --color-surface-muted: #242b30;
+    --color-main: #3a3f45;
+    --color-surface: #444a51;
+    --color-surface-muted: #4e555c;
 
     /* Text */
-    --color-txt-primary: #f3f6f5;
-    --color-txt-secondary: #a7b2b0;
-    --color-txt-on-accent: #10201d;
+    --color-txt-primary: #f2f4f5;
+    --color-txt-secondary: #c3c9ce;
+    --color-txt-on-accent: #14201d;
 
     /* Lines */
-    --color-border: #394247;
-    --color-ring: #65d6c2;
+    --color-border: #5f676f;
+    --color-ring: #8fd3c4;
 
     /* 30% — Supporting surfaces */
-    --color-hover: #303a3f;
+    --color-hover: #565d65;
 
     /* 10% — Accent */
-    --color-accent: #65d6c2;
-    --color-accent-hover: #83e2d1;
+    --color-accent: #8fd3c4;
+    --color-accent-hover: #a8e0d3;
 
     /* Status */
-    --color-success: #65c98d;
-    --color-warning: #e8b75f;
-    --color-danger: #ee7777;
+    --color-success: #7fd49b;
+    --color-warning: #efc36d;
+    --color-danger: #f28b8b;
 
     /* Radius */
     --radius-sm: 0.25rem;
     --radius-md: 0.5rem;
     --radius-lg: 1rem;
+}
+
+@utility btn-primary {
+    @apply bg-accent/20 text-txt-primary backdrop-blur-md
+    border border-accent/40 shadow-lg shadow-accent/10
+    hover:bg-accent/30
+    focus-visible:ring-2 focus-visible:ring-ring
+    font-medium rounded-lg text-base px-4 py-2.5 text-center;
+}
+
+@utility card-primary {
+    @apply bg-surface/60 backdrop-blur-lg rounded-2xl
+    border border-border shadow-xl shadow-black/20 p-6;
+}
+@utility input-primary {
+    @apply block w-full rounded-lg border border-border bg-main/60
+    px-3 py-2.5 text-sm text-txt-primary shadow-xs
+    placeholder:text-txt-secondary
+    focus:border-ring focus:ring-2 focus:ring-ring focus:outline-none
+    disabled:opacity-50 disabled:cursor-not-allowed;
 }

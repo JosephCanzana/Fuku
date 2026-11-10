@@ -5,7 +5,7 @@
 
         {# navigation #}
         <div class="flex items-center gap-2">
-            <a href="#" class="rounded-md px-3 py-1 text-txt-secondary hover:bg-hover hover:text-txt-primary">Home</a>
+            <a href="{% url 'pages:landing_page' %}" class="rounded-md px-3 py-1 text-txt-secondary hover:bg-hover hover:text-txt-primary">Home</a>
             <a href="#" class="rounded-md px-3 py-1 text-txt-secondary hover:bg-hover hover:text-txt-primary">Features</a>
             <a href="#" class="rounded-md px-3 py-1 text-txt-secondary hover:bg-hover hover:text-txt-primary">About</a>
         </div>
@@ -13,7 +13,7 @@
         {# login, sign up, and theme #}
         <div class="flex items-center gap-2">
             <a href="{% url 'accounts:login' %}" class="rounded-md px-3 py-1 text-txt-secondary hover:bg-hover hover:text-txt-primary">Log in</a>
-            <a href="{% url 'accounts:sign_up' %}" class="rounded-md bg-accent px-3 py-1 text-txt-on-accent hover:bg-accent-hover">Sign up</a>
+            <a href="{% url 'accounts:sign_up' %}" class="btn-primary px-3 py-1 rounded-md">Sign up</a>
         </div>
     </div>
 </nav>
