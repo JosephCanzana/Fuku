@@ -7,17 +7,20 @@ Sign up
 {% block content %}
 <div class="w-full h-full flex items-center justify-center flex-col">
     <form class="card-primary flex w-full max-w-md flex-col gap-4" method="post" action="">
+        {% csrf_token %}
         <div class="flex w-full justify-center items-center flex-col">
             <h1 class="text-2xl text-txt-primary font-bold ">Login</h1>
             <p class="text-lg text-txt-secondary">Notes. Generate. Review.</p>
+            {% for error in form.non_field_errors %}
+                <p class="mx-2 text-sm text-danger">{{ error }}</p>
+            {% endfor %}
         </div>
         <div>
             <label class="text-txt-primary" for="id_username">Username or Email</label>
-            <input name="username" class="input-primary" placeholder="TonyStark_3000" id="id_username" type="text" required>
-        </div>
-        <div>
-            <label class="text-txt-primary" for="id_email">Email</label>
-            <input name="email" class="input-primary" placeholder="email@example.com" id="id_email" type="email" required>
+            <input name="identification" class="input-primary" placeholder="TonyStark_3000 or email@example.com" id="id_username" type="text" required>
+            {% for error in form.identification.errors %}
+                <p class="text-sm text-danger">{{ error }}</p>
+            {% endfor %}
         </div>
         <div>
             <label class="text-txt-primary" for="id_password">Password</label>

@@ -1,6 +1,8 @@
 import re
 from django import forms
 from apps.accounts.models import User
+from django.db.models import Q
+from django.contrib.auth import authenticate
 
 class SignUpForm(forms.Form):
     username = forms.CharField(max_length=100, min_length=4)
@@ -48,5 +50,26 @@ class SignUpForm(forms.Form):
 
         if password and confirm_password and password != confirm_password:
             self.add_error("confirm_password", "Passwords don't match. Please retype it.")
+
+        return cleaned
+
+class LoginForm(forms.Form):
+    identification = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    def clean(self):
+        cleaned = super().clean()
+        identification = cleaned.get("identification")
+        password = cleaned.get("password")
+
+        if identification and password:
+            user = User.objects.filter(
+                Q(username__iexact=identification) | Q(email__iexact=identification)
+            ).first()
+
+            authenticated = authenticate(username=user.username, password=password) if user else None
+            if authenticated is None:
+                raise forms.ValidationError("Invalid username/email or password.")
+            self.user = authenticated
 
         return cleaned

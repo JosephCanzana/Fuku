@@ -45,6 +45,8 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = "accounts.User"
+# Location to send non logged in user
+LOGIN_URL = "accounts:login"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
