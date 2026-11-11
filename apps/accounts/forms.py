@@ -12,26 +12,31 @@ class SignUpForm(forms.Form):
         username = self.cleaned_data["username"]
         # If identical username already exist
         if User.objects.filter(username__iexact=username).exists():
-            raise forms.ValidationError("Username already exist")
+            raise forms.ValidationError("Username already exist.")
 
         return username
 
     def clean_email(self):
         email = self.cleaned_data["email"]
         if User.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError("Email is already used")
+            raise forms.ValidationError("Email already used.")
 
         return email
 
     def clean_password(self):
         password = self.cleaned_data["password"]
 
-        # atleast 8 letters, one capital, one small letter, one numerical
-        pattern = r"(?=.*[A-Za-z])(?=.*\d).{8,}"
-        if not re.fullmatch(pattern, password):
-            raise forms.ValidationError("The password is not strong enough")
+        errors = []
 
-        return password
+        if len(password) < 8:
+            errors.append("Use at least 8 characters.")
+        if not re.search(r"[A-Za-z]", password):
+            errors.append("Include at least one letter.")
+        if not re.search(r"\d", password):
+            errors.append("Include at least one number.")
+
+        if errors:
+            raise forms.ValidationError(errors)
 
     def clean(self):
         # initial clean
@@ -42,6 +47,6 @@ class SignUpForm(forms.Form):
         confirm_password = self.cleaned_data.get("confirm_password")
 
         if password and confirm_password and password != confirm_password:
-            self.add_error("confirm_password", "Confirm password and password is not same.")
+            self.add_error("confirm_password", "Passwords don't match. Please retype it.")
 
         return cleaned
