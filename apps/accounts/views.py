@@ -12,11 +12,13 @@ def sign_up(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            User.objects.create_user(
+            user = User.objects.create_user(
                 username=form.cleaned_data.get("username"),
                 email=form.cleaned_data.get("email"),
                 password=form.cleaned_data["password"]
             )
+
+            login(request, user)
             return redirect("accounts:user_dashboard")
     else:
         form = SignUpForm()

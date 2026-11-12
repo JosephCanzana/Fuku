@@ -40,6 +40,8 @@ class SignUpForm(forms.Form):
         if errors:
             raise forms.ValidationError(errors)
 
+        return password
+
     def clean(self):
         # initial clean
         cleaned = super().clean()
