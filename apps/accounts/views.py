@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from apps.accounts.forms import SignUpForm, LoginForm
 from apps.accounts.models import User
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -31,6 +32,7 @@ def login_view(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             login(request, form.user)
+            messages.neutral(request, f"Welcome back {form.user.username}!")
             return redirect("accounts:user_dashboard")
     else:
         form = LoginForm()

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Fuku{% endblock %}
 
@@ -8,6 +9,57 @@
         <div class="flex flex-1 min-h-0">
             {% include "includes/sidebar.html" %}
             <main class="flex-1 overflow-y-auto p-6">
+                {# Toast feedback #}
+                {% if messages %}
+                <div class="fixed bottom-4 right-4 z-50 flex w-full max-w-sm flex-col gap-2">
+                    {% for message in messages %}
+                    <div class="toast flex items-center gap-3 rounded-lg border border-border bg-surface p-4 text-txt-primary shadow-lg" role="alert">
+
+                        {% if message.tags == "success" %}
+                        <div class="flex size-7 shrink-0 items-center justify-center rounded bg-success/15 text-success">
+                            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <use href="{% static 'icons/sprite.svg' %}#check"></use>
+                            </svg>
+                        </div>
+                        {% elif message.tags == "warning" %}
+                        <div class="flex size-7 shrink-0 items-center justify-center rounded bg-warning/15 text-warning">
+                            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <use href="{% static 'icons/sprite.svg' %}#exclamation-triangle"></use>
+                            </svg>
+                        </div>
+                        {% elif message.tags == "error" %}
+                        <div class="flex size-7 shrink-0 items-center justify-center rounded bg-danger/15 text-danger">
+                            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <use href="{% static 'icons/sprite.svg' %}#x-circle"></use>
+                            </svg>
+                        </div>
+                        {% else %}
+                        <div class="flex size-7 shrink-0 items-center justify-center rounded bg-hover text-txt-secondary">
+                            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <use href="{% static 'icons/sprite.svg' %}#information"></use>
+                            </svg>
+                        </div>
+                        {% endif %}
+
+                        <div class="text-sm">{{ message }}</div>
+
+                        <button type="button" class="toast-close ms-auto rounded-md p-1 text-txt-secondary hover:bg-hover hover:text-txt-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none" aria-label="Close">
+                            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <use href="{% static 'icons/sprite.svg' %}#x-mark"></use>
+                            </svg>
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+                <script>
+                    document.querySelectorAll(".toast").forEach(function (toast) {
+                        const remove = function () { toast.remove(); };
+                        toast.querySelector(".toast-close").addEventListener("click", remove);
+                        setTimeout(remove, 4000);
+                    });
+                </script>
+                {% endif %}
+
                 {% block content %}
                 {% endblock %}
             </main>
