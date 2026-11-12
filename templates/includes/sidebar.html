@@ -1,0 +1,46 @@
+{% load static %}
+
+<aside id="sidebar" data-collapsed="false" class="group data-[collapsed=true]:w-16 transition-[width] duration-200 overflow-hidden flex justify-between flex-col left-0 w-42 shrink-0 bg-surface border-r border-border h-full">
+    <nav class="flex flex-col gap-1 p-2">
+        {% comment %}
+        nav links top: home, decks, and tags 
+        nav links bottom: about, logout
+        {% endcomment %}
+        <a href="#" class="sidebar-link">
+            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <use href="{% static 'icons/sprite.svg' %}#home"></use>
+            </svg>
+            <span class="sidebar-span">Home</span>
+        </a>
+        <a href="#" class="sidebar-link">
+            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <use href="{% static 'icons/sprite.svg' %}#rectangle-stack"></use>
+            </svg>
+            <span class="sidebar-span">Decks</span>
+        </a>
+        <a href="#" class="sidebar-link">
+            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <use href="{% static 'icons/sprite.svg' %}#tag"></use>
+            </svg>
+            <span class="sidebar-span">Tags</span>
+        </a>
+        
+    </nav>
+    <nav class="flex flex-col gap-1 p-2">
+        <a href="#" class="sidebar-link">
+            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <use href="{% static 'icons/sprite.svg' %}#information"></use>
+            </svg>
+            <span class="sidebar-span">About</span>
+        </a>
+        <form action="{% url 'accounts:logout' %}" method="post"  class="sidebar-link">
+            {% csrf_token %}
+            <button type="submit" class="flex items-center justify-center">
+                <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <use href="{% static 'icons/sprite.svg' %}#logout"></use>
+                </svg>
+                <span class="sidebar-span">Logout</span>
+            </button>
+        </form>
+    </nav>
+</aside>

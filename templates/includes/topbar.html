@@ -1,0 +1,22 @@
+{% load static %}
+
+<nav class="sticky top-0 z-50 h-12 bg-surface border-b border-border">
+    <div class="mx-auto flex h-full  items-center justify-between px-3">
+        <div class="flex items-center justify-center gap-5">
+            {# Humburger menu #}
+            <button type="button" id="sidebar-toggle" class="nav-icon-btn" aria-label="Open menu">
+                <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <use href="{% static 'icons/sprite.svg' %}#bars-3"></use>
+                </svg>
+            </button>
+            
+            {# logo #}
+            <a href="#" class="font-bold text-txt-primary">Fuku</a>
+        </div>
+            
+        {# login, sign up, and theme #}
+        <div class="flex items-center justify-center gap-2">
+            <a href="#" class="nav-icon-btn">{{ user.username }}</a>
+        </div>
+    </div>
+</nav>

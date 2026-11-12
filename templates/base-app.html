@@ -1,8 +1,37 @@
 {% extends "base.html" %}
 
-{% block title %}app{% endblock %}
+{% block title %}Fuku{% endblock %}
 
 {% block base %}
-    {% block content %}
-    {% endblock %}
+    <div class="flex h-dvh flex-col">
+        {% include "includes/topbar.html" %}
+        <div class="flex flex-1 min-h-0">
+            {% include "includes/sidebar.html" %}
+            <main class="flex-1 overflow-y-auto p-6">
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+    
+<script>
+    const sidebar = document.getElementById("sidebar");
+    const toggle = document.getElementById("sidebar-toggle");
+
+    // Restore the save state when loaded
+    const saved = localStorage.getItem("sidebar-collapsed");
+    if (saved !== null) {
+        sidebar.dataset.collapsed = saved;
+    }
+
+    // If click save the sidebar state
+    toggle.addEventListener("click", function () {
+        if (sidebar.dataset.collapsed === "false") {
+            sidebar.dataset.collapsed = "true";
+        } else {
+            sidebar.dataset.collapsed = "false";
+        }
+        localStorage.setItem("sidebar-collapsed", sidebar.dataset.collapsed);
+    });
+</script>
 {% endblock %}
