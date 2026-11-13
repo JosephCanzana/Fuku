@@ -68,7 +68,8 @@
             </main>
         </div>
     </div>
-    
+
+<!-- Sidebar logic -->
 <script>
     const sidebar = document.getElementById("sidebar");
     const toggle = document.getElementById("sidebar-toggle");
@@ -76,6 +77,7 @@
     // Restore the save state when loaded
     const saved = localStorage.getItem("sidebar-collapsed");
     if (saved !== null) {
+        // aside control
         sidebar.dataset.collapsed = saved;
     }
 

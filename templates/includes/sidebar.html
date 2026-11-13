@@ -6,19 +6,19 @@
         nav links top: home, decks, and tags 
         nav links bottom: about, logout
         {% endcomment %}
-        <a href="#" class="sidebar-link">
+        <a href="{% url 'accounts:user_dashboard' %}" class="sidebar-link">
             <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <use href="{% static 'icons/sprite.svg' %}#home"></use>
             </svg>
             <span class="sidebar-span">Home</span>
         </a>
-        <a href="#" class="sidebar-link">
+        <a href="{% url 'decks:decks_page' %}" class="sidebar-link">
             <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <use href="{% static 'icons/sprite.svg' %}#rectangle-stack"></use>
             </svg>
             <span class="sidebar-span">Decks</span>
         </a>
-        <a href="#" class="sidebar-link">
+        <a href="{% url 'decks:tags_page' %}" class="sidebar-link">
             <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <use href="{% static 'icons/sprite.svg' %}#tag"></use>
             </svg>
@@ -27,7 +27,7 @@
         
     </nav>
     <nav class="flex flex-col gap-1 p-2">
-        <a href="#" class="sidebar-link">
+        <a href="{% url 'pages:about_page' %}" class="sidebar-link">
             <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <use href="{% static 'icons/sprite.svg' %}#information"></use>
             </svg>

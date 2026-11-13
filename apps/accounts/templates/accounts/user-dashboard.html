@@ -5,12 +5,6 @@
 {% block content %}
 <div class="text-txt-primary">
     This is Dashboard
-    {% if user.is_authenticated %}
-    <form action="{% url 'accounts:logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Log Out</button>
-    </form>
-    {% endif %}
 
 </div>
 {% endblock %}
