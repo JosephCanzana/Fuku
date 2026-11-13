@@ -23,7 +23,7 @@ Sign up
         <div>
             <label class="text-txt-primary" for="id_email">Email</label>
             <input name="email" class="input-primary" placeholder="email@example.com" id="id_email" type="email" 
-            value="{{ form.email.valu|default:'' }}" required>
+            value="{{ form.email.value|default:'' }}" required>
             {% for error in form.email.errors %}
                 <p class="mx-2 text-sm text-danger">{{ error }}</p>
             {% endfor %}

@@ -12,3 +12,48 @@
     {% endblock %}
 </body>
 </html>
+
+
+<script>
+    // All modal related elements
+    const modal = document.getElementById("app-modal");
+    const message = document.getElementById("modal-message");
+    const confirmBtn = document.getElementById("modal-confirm");
+    const cancelBtn = document.getElementById("modal-cancel");
+    let pendingForm = null;
+
+    // Custom values inside
+    function openModal(text, confirmText, type) {
+        // put text into message
+        message.textContent = text;
+        // put confirmText into confirmBtn
+        confirmBtn.textContent = confirmText;
+        // set the type on the modal
+        modal.dataset.type = type;
+        modal.showModal();
+    }
+
+    //  open modal a button is clicked, call openModal
+    document.querySelectorAll("[data-modal-open]").forEach(function (button) {
+        button.addEventListener("click", function () {
+            // call openModal with this button's data- values
+            pendingForm = button.closest("form");
+            openModal(
+                button.dataset.modalMessage || "Are you sure?",
+                button.dataset.modalConfirm || "Confirm",
+                button.dataset.modalType || "neutral"
+            );
+        });
+    });
+
+    cancelBtn.addEventListener("click", function () {
+        modal.close();
+    });
+
+    confirmBtn.addEventListener("click", function () {
+        if (pendingForm) {
+            pendingForm.requestSubmit();
+        }
+        modal.close();
+    });
+</script>

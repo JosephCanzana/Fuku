@@ -32,7 +32,7 @@ def login_view(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             login(request, form.user)
-            messages.neutral(request, f"Welcome back {form.user.username}!")
+            messages.info(request, f"Welcome back {form.user.username}!")
             return redirect("accounts:user_dashboard")
     else:
         form = LoginForm()

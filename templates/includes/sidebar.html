@@ -35,7 +35,11 @@
         </a>
         <form action="{% url 'accounts:logout' %}" method="post"  class="sidebar-link">
             {% csrf_token %}
-            <button type="submit" class="flex items-center justify-center gap-3">
+            <button type="button" class="flex items-center justify-center gap-3"
+                data-modal-open
+                data-modal-message="Log out of Fuku?"
+                data-modal-confirm="Log out"
+                data-modal-type="warning">
                 <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                     <use href="{% static 'icons/sprite.svg' %}#logout"></use>
                 </svg>
