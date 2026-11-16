@@ -10,15 +10,15 @@
         <a href="{% url 'decks:add_deck' %}" class="btn-primary">New deck</a>
     </div>
     <div class="mb-4 flex gap-2">
-    <a href="{% url 'decks:decks_page' %}"
-       class="rounded-md px-3 py-1 text-sm {% if not show_archived %}bg-hover text-txt-primary{% else %}text-txt-secondary hover:bg-hover{% endif %}">
-        Active
-    </a>
-    <a href="{% url 'decks:decks_page' %}?show=archived"
-       class="rounded-md px-3 py-1 text-sm {% if show_archived %}bg-hover text-txt-primary{% else %}text-txt-secondary hover:bg-hover{% endif %}">
-        Archived
-    </a>
-</div>
+        <a href="{% url 'decks:decks_page' %}"
+            class="rounded-md px-3 py-1 text-sm {% if not show_archived %}bg-hover text-txt-primary{% else %}text-txt-secondary hover:bg-hover{% endif %}">
+            Active
+        </a>
+        <a href="{% url 'decks:decks_page' %}?show=archived"
+        class="rounded-md px-3 py-1 text-sm {% if show_archived %}bg-hover text-txt-primary{% else %}text-txt-secondary hover:bg-hover{% endif %}">
+            Archived
+        </a>
+    </div>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {% for deck in decks %}

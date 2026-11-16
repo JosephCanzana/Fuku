@@ -1,9 +1,43 @@
 {% extends "base-app.html" %}
+{% load static %}
 
 {% block title %}Tags{% endblock %}
 
 {% block content %}
-<div class="text-txt-primary">
-    This is Tags page
+<div class="w-full text-txt-primary">
+    <div class="mb-6 flex items-center justify-between">
+        <h1 class="text-2xl font-bold">Tags</h1>
+        <a href="{% url 'decks:add_tag' %}" class="btn-primary">New Tag</a>
+    </div>
+
+    <div class="flex flex-wrap gap-2 w-full">
+        {% for tag in tags %}
+            <div class="group inline-flex items-center rounded-full border border-border pl-3 pr-1 py-1 text-lg">
+                <span class="font-medium">{{ tag.name }}</span>
+
+                <a href="{% url 'decks:edit_tag' tag.pk %}"
+                class="nav-icon-btn rounded-full"
+                aria-label="Edit tag {{ tag.name }}"
+                title="Edit">
+                    <svg class="size-4 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <use href="{% static 'icons/sprite.svg' %}#pencil-square"></use>
+                    </svg>
+                </a>
+
+                <form method="post"
+                    action="{% url 'decks:delete_tag' tag.pk %}"
+                    class="inline-flex">
+                    {% csrf_token %}
+                    <button type="button" class="nav-icon-btn rounded-full">
+                        <svg class="size-4 text-danger" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <use href="{% static 'icons/sprite.svg' %}#trash"></use>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        {% empty %}
+            <p class="text-txt-secondary">No tags yet. Create your first one.</p>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

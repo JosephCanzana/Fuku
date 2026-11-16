@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
-from apps.decks.forms import DeckForm
-from apps.decks.models import Deck
+from apps.decks.forms import DeckForm, TagForm
+from apps.decks.models import Deck, Tag
 
 # DECKS
 @login_required
@@ -75,20 +75,47 @@ def archive_deck(request, pk):
 # TAGS
 @login_required
 def tags_page(request):
-    return render(request, "decks/tag_pages/tags.html")
+    tags = Tag.objects.filter(account=request.user)
+    return render(request, "decks/tag_pages/tags.html", {"tags":tags})
 
 
 @login_required
 def add_tag(request):
-    return render(request, "decks/tag_pages/form.html")
+    if request.method == "POST":
+        form = TagForm(request.POST, user=request.user)
+        if form.is_valid():
+            # Create tag form but don't save yet
+            tag = form.save(commit=False)
+            # Setting the deck user on back end to avoid attacks on frontend
+            tag.account = request.user
+            # Save to database
+            tag.save()
+            messages.success(request, "Tag Added.")
+            return redirect("decks:tags_page")
+    else:
+        form = TagForm(user=request.user)
+    return render(request, "decks/tag_pages/form.html", {"form":form})
 
 
 @login_required
 def edit_tag(request, pk):
-    return render(request, "decks/tag_pages/form.html")
+    tag = get_object_or_404(Tag, pk=pk, account=request.user)
+    if request.method == "POST":
+        form = TagForm(request.POST, instance=tag, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Tag updated.")
+            return redirect("decks:tags_page")
+
+    else:
+        form = TagForm(instance=tag, user=request.user)
+    return render(request, "decks/tag_pages/form.html", {"form":form})
 
 
 @login_required
 @require_POST
 def delete_tag(request, pk):
-    return render(request, "decks/tag_pages/tags.html")
+    tag = get_object_or_404(Tag, pk=pk, account=request.user)
+    tag.delete()
+    messages.success(request, "Tag deleted.")
+    return redirect("decks:tags_page")
