@@ -1,9 +1,42 @@
 {% extends "base-app.html" %}
 
-{% block title %}Deck Form{% endblock %}
+{% block title %}{% if deck %}Edit deck{% else %}New deck{% endif %}{% endblock %}
 
 {% block content %}
-<div class="text-txt-primary">
-    This is deck form
+<div class="flex w-full justify-center">
+    <form method="post" class="card-primary flex w-full max-w-md flex-col gap-4">
+        {% csrf_token %}
+        <h1 class="text-2xl font-bold text-txt-primary">
+            {% if deck %}Edit deck{% else %}New deck{% endif %}
+        </h1>
+
+        <div>
+            <label class="mb-1 block text-txt-primary" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            {{ form.name }}
+            {% for error in form.name.errors %}
+                <p class="text-sm text-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div>
+            <label class="mb-1 block text-txt-primary" for="{{ form.tag.id_for_label }}">Tag (optional)</label>
+            {{ form.tag }}
+            {% for error in form.tag.errors %}
+                <p class="text-sm text-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        {% if deck %}
+        <div class="flex items-center gap-2">
+            {{ form.is_archive }}
+            <label class="text-txt-primary" for="{{ form.is_archive.id_for_label }}">Archive this deck</label>
+        </div>
+        {% endif %}
+
+        <div class="flex justify-end gap-3">
+            <a href="{% url 'decks:decks_page' %}" class="rounded-md border border-border px-4 py-2 text-sm text-txt-primary hover:bg-hover">Cancel</a>
+            <button type="submit" class="btn-primary">Save</button>
+        </div>
+    </form>
 </div>
 {% endblock %}

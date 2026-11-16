@@ -1,9 +1,35 @@
 {% extends "base-app.html" %}
+{% load static %}
 
 {% block title %}Decks{% endblock %}
 
 {% block content %}
-<div class="text-txt-primary">
-    This is deck page
+<div class="w-full text-txt-primary">
+    <div class="mb-6 flex items-center justify-between">
+        <h1 class="text-2xl font-bold">Decks</h1>
+        <a href="{% url 'decks:add_deck' %}" class="btn-primary">New deck</a>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {% for deck in decks %}
+        <div class="card-primary flex min-h-40 flex-col justify-between">
+            <div class="flex flex-col gap-2">
+                <span class="font-medium">{{ deck.name }}</span>
+                {% if deck.tag %}
+                <span class="w-fit rounded-full bg-hover px-2 py-0.5 text-xs text-txt-secondary">{{ deck.tag.name }}</span>
+                {% endif %}
+            </div>
+            <div class="flex justify-end">
+                <a href="{% url 'decks:edit_deck' deck.pk %}" class="nav-icon-btn">
+                    <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <use href="{% static 'icons/sprite.svg' %}#pencil-square"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <p class="col-span-full text-txt-secondary">No decks yet. Create your first one.</p>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
