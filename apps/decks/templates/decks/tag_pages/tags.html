@@ -26,7 +26,11 @@
 
                 <form method="post"
                     action="{% url 'decks:delete_tag' tag.pk %}"
-                    class="inline-flex">
+                    aria-label="Delete deck"
+                        data-modal-open
+                        data-modal-message="Delete this tag?"
+                        data-modal-confirm="Delete"
+                        data-modal-type="danger">
                     {% csrf_token %}
                     <button type="button" class="nav-icon-btn rounded-full">
                         <svg class="size-4 text-danger" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
