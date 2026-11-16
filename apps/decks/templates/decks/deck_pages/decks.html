@@ -9,6 +9,16 @@
         <h1 class="text-2xl font-bold">Decks</h1>
         <a href="{% url 'decks:add_deck' %}" class="btn-primary">New deck</a>
     </div>
+    <div class="mb-4 flex gap-2">
+    <a href="{% url 'decks:decks_page' %}"
+       class="rounded-md px-3 py-1 text-sm {% if not show_archived %}bg-hover text-txt-primary{% else %}text-txt-secondary hover:bg-hover{% endif %}">
+        Active
+    </a>
+    <a href="{% url 'decks:decks_page' %}?show=archived"
+       class="rounded-md px-3 py-1 text-sm {% if show_archived %}bg-hover text-txt-primary{% else %}text-txt-secondary hover:bg-hover{% endif %}">
+        Archived
+    </a>
+</div>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {% for deck in decks %}
@@ -20,11 +30,40 @@
                 {% endif %}
             </div>
             <div class="flex justify-end">
+                {# delete #}
+                <form method="post" action="{% url 'decks:delete_deck' deck.pk %}">
+                    {% csrf_token %}
+                    <button type="button" class="nav-icon-btn group" aria-label="Delete deck"
+                        data-modal-open
+                        data-modal-message="Delete this deck and all its cards?"
+                        data-modal-confirm="Delete"
+                        data-modal-type="danger">
+                        <svg class="size-5 text-danger" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <use href="{% static 'icons/sprite.svg' %}#trash"></use>
+                        </svg>
+                    </button>
+                </form>
+
+                {# archive or restore #}
+                <form method="post" action="{% url 'decks:archive_deck' deck.pk %}">
+                    {% csrf_token %}
+                    <button type="button" class="nav-icon-btn" aria-label="{% if deck.is_archive %}Restore deck{% else %}Archive deck{% endif %}"
+                        data-modal-open
+                        data-modal-message="{% if deck.is_archive %}Restore{% else %}Archive{% endif %} this deck and all its cards?"
+                        data-modal-confirm="{% if deck.is_archive %}Restore{% else %}Archive{% endif %}"
+                        data-modal-type="{% if deck.is_archive %}success{% else %}warning{% endif %}">
+                        <svg class="size-5 {% if deck.is_archive %}text-success{% else %}text-warning{% endif %}" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <use href="{% static 'icons/sprite.svg' %}#{% if deck.is_archive %}arrow-uturn-left{% else %}archive-box{% endif %}"></use>
+                        </svg>
+                    </button>
+                </form>
+                {% if not deck.is_archive %}
                 <a href="{% url 'decks:edit_deck' deck.pk %}" class="nav-icon-btn">
-                    <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <svg class="size-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                         <use href="{% static 'icons/sprite.svg' %}#pencil-square"></use>
                     </svg>
                 </a>
+                {% endif %}
             </div>
         </div>
         {% empty %}

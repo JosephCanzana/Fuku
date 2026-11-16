@@ -8,8 +8,17 @@ from apps.decks.models import Deck
 # DECKS
 @login_required
 def decks_page(request):
-    decks = Deck.objects.filter(account=request.user, is_archive=False).order_by("name")
-    return render(request, "decks/deck_pages/decks.html", {"decks": decks})
+    show_archived = request.GET.get("show") == "archived"
+
+    decks = (
+        Deck.objects.filter(account=request.user, is_archive=show_archived)
+        .select_related("tag")
+        .order_by("name")
+    )
+    return render(request, "decks/deck_pages/decks.html", {
+        "decks": decks,
+        "show_archived": show_archived,
+    })
 
 
 @login_required
@@ -47,13 +56,20 @@ def edit_deck(request, pk):
 @login_required
 @require_POST
 def delete_deck(request, pk):
-    return render(request, "decks/deck_pages/decks.html")
+    deck = get_object_or_404(Deck, pk=pk, account=request.user)
+    deck.delete()
+    messages.success(request, "Deck deleted.")
+    return redirect("decks:decks_page")
 
 
 @login_required
 @require_POST
 def archive_deck(request, pk):
-    return render(request, "decks/deck_pages/decks.html")
+    deck = get_object_or_404(Deck, pk=pk, account=request.user)
+    deck.is_archive = not deck.is_archive
+    deck.save()
+    messages.success(request, "Deck archived." if deck.is_archive else "Deck unarchived.")
+    return redirect("decks:decks_page")
 
 
 # TAGS
