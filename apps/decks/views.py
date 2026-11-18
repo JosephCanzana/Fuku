@@ -171,14 +171,29 @@ def add_card(request, deck_pk):
 @login_required
 def edit_card(request, card_pk):
     # Edit specific card
-    return render(request, "decks/card_pages/form.html")
+    card = get_object_or_404(Flashcard, pk=card_pk, deck__account=request.user)
+    deck = card.deck
+
+    if request.method == "POST":
+        form = FlashcardForm(request.POST, instance=card)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Card updated.")
+            return redirect("decks:deck_detail", deck_pk=deck.pk)
+    else:
+        form = FlashcardForm(instance=card)
+
+    return render(request, "decks/card_pages/form.html", {"form": form, "deck": deck})
 
 
 @login_required
 @require_POST
 def delete_card(request, card_pk):
     # Delete specific card
-    ...
+    card = get_object_or_404(Flashcard, pk=card_pk, deck__account=request.user)
+    card.delete()
+    messages.success(request, "Card deleted.")
+    return redirect("decks:deck_detail", deck_pk=card.deck.pk)
 
 
 @login_required

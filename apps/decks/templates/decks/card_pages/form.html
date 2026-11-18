@@ -1,33 +1,48 @@
 {% extends "base-app.html" %}
+{% load static %}
 
-{% block title %}{% if card %}Edit card{% else %}New card{% endif %}{% endblock %}
+{% block title %}{% if form.instance.pk %}Edit card{% else %}New card{% endif %}{% endblock %}
 
 {% block content %}
-<div class="flex w-full justify-center">
-    <form method="post" class="card-primary flex w-full max-w-md flex-col gap-4">
+<div class="flex w-full justify-center flex-col items-center">
+    <div class="mb-6 flex items-center justify-between">
+        <div class="flex items-center justify-center gap-2">
+            <a href="{% url 'decks:deck_detail' deck.pk %}" class="back-btn">
+                <svg class="size-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <use href="{% static 'icons/sprite.svg' %}#chevron-left"></use>
+                </svg>
+            </a>
+            <div>
+                <h1 class="text-2xl font-bold text-txt-primary">{{ deck.name }}</h1>
+            </div>
+        </div>
+    </div>
+    <form method="post" class="card-primary flex w-full max-w-3xl flex-col gap-4">
         {% csrf_token %}
         <h1 class="text-2xl font-bold text-txt-primary">
-            {% if card %}Edit card{% else %}New card{% endif %}
+            {% if form.instance.pk %}Edit card{% else %}New card{% endif %}
         </h1>
 
         {% for error in form.non_field_errors %}
             <p class="text-sm text-danger">{{ error }}</p>
         {% endfor %}
 
-        <div>
-            <label class="mb-1 block text-txt-primary" for="{{ form.question.id_for_label }}">{{ form.question.label }}</label>
-            {{ form.question }}
-            {% for error in form.question.errors %}
-                <p class="text-sm text-danger">{{ error }}</p>
-            {% endfor %}
-        </div>
+        <div class="grid gap-4 md:grid-cols-2">
+            <div>
+                <label class="mb-1 block text-txt-primary" for="{{ form.question.id_for_label }}">{{ form.question.label }}</label>
+                {{ form.question }}
+                {% for error in form.question.errors %}
+                    <p class="text-sm text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
 
-        <div>
-            <label class="mb-1 block text-txt-primary" for="{{ form.answer.id_for_label }}">{{ form.answer.label }}</label>
-            {{ form.answer }}
-            {% for error in form.answer.errors %}
-                <p class="text-sm text-danger">{{ error }}</p>
-            {% endfor %}
+            <div>
+                <label class="mb-1 block text-txt-primary" for="{{ form.answer.id_for_label }}">{{ form.answer.label }}</label>
+                {{ form.answer }}
+                {% for error in form.answer.errors %}
+                    <p class="text-sm text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
         </div>
 
         <div>

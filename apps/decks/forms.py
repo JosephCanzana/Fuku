@@ -64,9 +64,10 @@ class FlashcardForm(forms.ModelForm):
             "answer": forms.Textarea(attrs={"class": "textarea-primary", "placeholder": "Answer"})
         }
 
-    def __init__(self, *args, deck, **kwargs):
+    def __init__(self, *args, deck=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.deck = deck
+        # On edit the card already know its deck
+        self.deck = self.instance.deck if self.instance.pk else deck
         # When editing, turn the stored list back into "a;b;c"
         if self.instance.pk and self.instance.choices:
             self.initial["choices"] = ";".join(self.instance.choices)

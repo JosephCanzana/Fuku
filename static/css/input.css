@@ -91,6 +91,12 @@
     focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none;
 }
 
+@utility back-btn {
+    @apply rounded-full p-2 text-txt-secondary bg-surface backdrop-blur-lg shadow-xl border border-border 
+    cursor-pointer hover:bg-hover hover:text-txt-primary
+    focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none;
+}
+
 @utility sidebar-link {
     @apply flex items-center gap-3 rounded-md px-3 py-2 text-txt-secondary
     hover:bg-hover hover:text-txt-primary

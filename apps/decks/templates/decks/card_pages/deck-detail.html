@@ -1,19 +1,63 @@
 {% extends "base-app.html" %}
 {% load static %}
 
-{% block title %}Deck detail{% endblock %}
+{% block title %}{{ deck.name }}{% endblock %}
 
 {% block content %}
 <div class="w-full text-txt-primary">
+
     <div class="mb-6 flex items-center justify-between">
-        <h1 class="text-2xl font-bold">{{ deck.name }}</h1>
-        <a href="{% url 'decks:add_card' deck.pk %}" class="btn-primary">Add card</a>
+        <div class="flex items-center justify-center gap-2">
+            <a href="{% url 'decks:decks_page' %}" class="back-btn">
+                <svg class="size-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <use href="{% static 'icons/sprite.svg' %}#chevron-left"></use>
+                </svg>
+            </a>
+            <div>
+                <h1 class="text-2xl font-bold">{{ deck.name }}</h1>
+                <p class="text-sm text-txt-secondary">{{ cards|length }} card{{ cards|length|pluralize }}</p>
+            </div>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'decks:review_deck' deck.pk %}" class="btn-primary">Review</a>
+            <a href="{% url 'decks:add_card' deck.pk %}" class="btn-primary">Add card</a>
+        </div>
     </div>
 
-    {% for card in cards %}
-        <p>{{ card }}</p>
-    {% empty %}
-        <p>No cards yet.</p>
-    {% endfor %}
+    <div class="card-primary flex flex-col divide-y divide-border p-0 mx-40 my-10">
+        {% for card in cards %}
+            <div class="flex items-center justify-between gap-4 px-4 py-3">
+                <div class="min-w-0">
+                    <p class="truncate font-semibold">{{ card.question|truncatechars:120 }}</p>
+                    <p class="text-xs text-txt-secondary">
+                        {{ card.get_state_display }} · due {{ card.next_review_at|date:"M d" }}
+                    </p>
+                </div>
+
+                <div class="flex shrink-0 items-center gap-3 text-sm">
+                    <a href="{% url 'decks:edit_card' card.pk %}" class="nav-icon-btn group">
+                        <svg class="size-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <use href="{% static 'icons/sprite.svg' %}#pencil-square"></use>
+                        </svg>
+                    </a>
+                    <form method="post" action="{% url 'decks:delete_card' card.pk %}"
+                            data-modal-open
+                            data-modal-message="Delete this card and all of it's history?"
+                            data-modal-confirm="Delete"
+                            data-modal-type="warning">
+                        {% csrf_token %}
+                        <button type="button" class="nav-icon-btn group" aria-label="Delete card">
+                            <svg class="size-5 text-danger" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <use href="{% static 'icons/sprite.svg' %}#trash"></use>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <p class="px-4 py-6 text-center text-txt-secondary">No cards yet. Add your first one!</p>
+        {% endfor %}
+    </div>
+
 </div>
 {% endblock %}
