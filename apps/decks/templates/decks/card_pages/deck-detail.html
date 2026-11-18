@@ -5,6 +5,15 @@
 
 {% block content %}
 <div class="w-full text-txt-primary">
-    This is the deck detail
+    <div class="mb-6 flex items-center justify-between">
+        <h1 class="text-2xl font-bold">{{ deck.name }}</h1>
+        <a href="{% url 'decks:add_card' deck.pk %}" class="btn-primary">Add card</a>
+    </div>
+
+    {% for card in cards %}
+        <p>{{ card }}</p>
+    {% empty %}
+        <p>No cards yet.</p>
+    {% endfor %}
 </div>
 {% endblock %}

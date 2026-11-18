@@ -1,10 +1,50 @@
 {% extends "base-app.html" %}
-{% load static %}
 
-{% block title %}Deck detail{% endblock %}
+{% block title %}{% if card %}Edit card{% else %}New card{% endif %}{% endblock %}
 
 {% block content %}
-<div class="w-full text-txt-primary">
-    This is the form page
+<div class="flex w-full justify-center">
+    <form method="post" class="card-primary flex w-full max-w-md flex-col gap-4">
+        {% csrf_token %}
+        <h1 class="text-2xl font-bold text-txt-primary">
+            {% if card %}Edit card{% else %}New card{% endif %}
+        </h1>
+
+        {% for error in form.non_field_errors %}
+            <p class="text-sm text-danger">{{ error }}</p>
+        {% endfor %}
+
+        <div>
+            <label class="mb-1 block text-txt-primary" for="{{ form.question.id_for_label }}">{{ form.question.label }}</label>
+            {{ form.question }}
+            {% for error in form.question.errors %}
+                <p class="text-sm text-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div>
+            <label class="mb-1 block text-txt-primary" for="{{ form.answer.id_for_label }}">{{ form.answer.label }}</label>
+            {{ form.answer }}
+            {% for error in form.answer.errors %}
+                <p class="text-sm text-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div>
+            <label class="mb-1 block text-txt-primary" for="{{ form.choices.id_for_label }}">{{ form.choices.label }}</label>
+            {{ form.choices }}
+            {% if form.choices.help_text %}
+                <p class="text-sm text-txt-secondary">{{ form.choices.help_text }}</p>
+            {% endif %}
+            {% for error in form.choices.errors %}
+                <p class="text-sm text-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="flex justify-end gap-3">
+            <a href="{% url 'decks:deck_detail' deck.pk %}" class="rounded-md border border-border px-4 py-2 text-sm text-txt-primary hover:bg-hover">Cancel</a>
+            <button type="submit" class="btn-primary">Save</button>
+        </div>
+    </form>
 </div>
 {% endblock %}

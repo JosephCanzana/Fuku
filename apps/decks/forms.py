@@ -1,5 +1,5 @@
 from django import forms
-from apps.decks.models import Deck, Tag
+from apps.decks.models import Deck, Tag, Flashcard
 
 class DeckForm(forms.ModelForm):
     def __init__(self, *args, user, **kwargs):
@@ -46,3 +46,34 @@ class TagForm(forms.ModelForm):
             raise forms.ValidationError("You already have a tag with this name.")
 
         return name
+
+
+class FlashcardForm(forms.ModelForm):
+    choices = forms.CharField(
+        required=False,
+        label="Choices",
+        help_text="Separate with semicolons, e.g. Paris;London;Rome",
+        widget=forms.TextInput(attrs={"class": "input-primary"}),
+    )
+
+    class Meta:
+        model = Flashcard
+        fields = ["question", "answer", "choices"]
+        widgets = {
+            "question": forms.Textarea(attrs={"class": "textarea-primary", "placeholder": "Question"}),
+            "answer": forms.Textarea(attrs={"class": "textarea-primary", "placeholder": "Answer"})
+        }
+
+    def __init__(self, *args, deck, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.deck = deck
+        # When editing, turn the stored list back into "a;b;c"
+        if self.instance.pk and self.instance.choices:
+            self.initial["choices"] = ";".join(self.instance.choices)
+
+    def clean_choices(self):
+        raw = self.cleaned_data["choices"]
+        if not raw.strip():
+            return None
+        # Turn raw ; choices into a list
+        return [c.strip() for c in raw.split(";") if c.strip()]

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
-from apps.decks.forms import DeckForm, TagForm
+from apps.decks.forms import DeckForm, TagForm, FlashcardForm
 from apps.decks.models import Deck, Tag, Flashcard
 
 # DECKS
@@ -121,11 +121,13 @@ def delete_tag(request, pk):
     return redirect("decks:tags_page")
 
 
-# Flashcard
+# FLASHCARD
 @login_required
 def deck_detail(request, deck_pk):
-    # View of All flashcard
-    return render(request, "decks/card_pages/deck-detail.html")
+    # View all flashcard
+    deck = get_object_or_404(Deck, pk=deck_pk, account=request.user)
+    cards = Flashcard.objects.filter(deck=deck)
+    return render(request, "decks/card_pages/deck-detail.html", {"deck": deck, "cards": cards})
 
 
 @login_required
@@ -150,8 +152,20 @@ def undo(request, deck_pk):
 
 @login_required
 def add_card(request, deck_pk):
-    # Individual add
-    return render(request, "decks/card_pages/form.html")
+    # Individual card add
+    deck = get_object_or_404(Deck, pk=deck_pk, account=request.user)
+    if request.method == "POST":
+        form = FlashcardForm(request.POST, deck=deck)
+        if form.is_valid():
+            card = form.save(commit=False)
+            card.deck = deck
+            card.save()
+            messages.success(request, "Card Added.")
+            return redirect("decks:deck_detail", deck_pk=deck_pk)
+    else:
+        form = FlashcardForm(deck=deck)
+    
+    return render(request, "decks/card_pages/form.html", {"form":form, "deck": deck})
 
 
 @login_required
