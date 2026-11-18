@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from apps.decks.forms import DeckForm, TagForm
-from apps.decks.models import Deck, Tag
+from apps.decks.models import Deck, Tag, Flashcard
 
 # DECKS
 @login_required
@@ -119,3 +119,68 @@ def delete_tag(request, pk):
     tag.delete()
     messages.success(request, "Tag deleted.")
     return redirect("decks:tags_page")
+
+
+# Flashcard
+@login_required
+def deck_detail(request, deck_pk):
+    # View of All flashcard
+    return render(request, "decks/card_pages/deck-detail.html")
+
+
+@login_required
+def review_deck(request, deck_pk):
+    # Form of individual flashcard that would recieve a post with rating
+    return render(request, "decks/card_pages/review.html")
+
+
+@login_required
+@require_POST
+def rate_card(request, card_pk):
+    # Form of individual flashcard that would recieve a post with rating
+    ...
+
+
+@login_required
+@require_POST
+def undo(request, deck_pk):
+    # undo the previous card rate
+    ...
+
+
+@login_required
+def add_card(request, deck_pk):
+    # Individual add
+    return render(request, "decks/card_pages/form.html")
+
+
+@login_required
+def edit_card(request, card_pk):
+    # Edit specific card
+    return render(request, "decks/card_pages/form.html")
+
+
+@login_required
+@require_POST
+def delete_card(request, card_pk):
+    # Delete specific card
+    ...
+
+
+@login_required
+def import_flashcard(request, deck_pk):
+    # Import CSV of flashcard
+    return render(request, "decks/card_pages/import.html")
+
+
+@login_required
+def export_flashcard(request, deck_pk):
+    # Create a CSV of flashcard and download
+    ...
+
+
+@login_required
+def flashcard_generate(request, deck_pk):
+    # Form with the desired file that will be used to create flashcard
+    # it would return a CSV file from the AI
+    return render(request, "decks/card_pages/generate.html")

@@ -22,48 +22,57 @@
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {% for deck in decks %}
-        <div class="card-primary flex min-h-40 flex-col justify-between">
+        <div class="card-primary relative flex min-h-40 flex-col justify-between transition-colors hover:border-accent">
             <div class="flex flex-col gap-2">
-                <span class="font-medium">{{ deck.name }}</span>
+                <a href="{% url 'decks:deck_detail' deck.pk %}" class="font-medium after:absolute after:inset-0 after:rounded-2xl focus-visible:after:ring-2 focus-visible:after:ring-ring focus-visible:outline-none">
+                    {{ deck.name }}
+                </a>
                 {% if deck.tag %}
                 <span class="w-fit rounded-full bg-hover px-2 py-0.5 text-xs text-txt-secondary">{{ deck.tag.name }}</span>
                 {% endif %}
             </div>
             <div class="flex justify-end">
-                {# delete #}
-                <form method="post" action="{% url 'decks:delete_deck' deck.pk %}">
-                    {% csrf_token %}
-                    <button type="button" class="nav-icon-btn group" aria-label="Delete deck"
-                        data-modal-open
-                        data-modal-message="Delete this deck and all its cards?"
-                        data-modal-confirm="Delete"
-                        data-modal-type="danger">
-                        <svg class="size-5 text-danger" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                            <use href="{% static 'icons/sprite.svg' %}#trash"></use>
+                <div class="relative z-10 flex items-center">
+                    {% if not deck.is_archive %}
+                        <a href="{% url 'decks:review_deck' deck.pk %}" class="mr-2 rounded-md bg-accent px-3 py-1 text-sm font-medium text-txt-on-accent hover:bg-accent-hover">
+                            Review
+                        </a>
+                    {% endif %}
+                    {# delete #}
+                    <form method="post" action="{% url 'decks:delete_deck' deck.pk %}">
+                        {% csrf_token %}
+                        <button type="button" class="nav-icon-btn group" aria-label="Delete deck"
+                            data-modal-open
+                            data-modal-message="Delete this deck and all its cards?"
+                            data-modal-confirm="Delete"
+                            data-modal-type="danger">
+                            <svg class="size-5 text-danger" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <use href="{% static 'icons/sprite.svg' %}#trash"></use>
+                            </svg>
+                        </button>
+                    </form>
+                    
+                    {# archive or restore #}
+                    <form method="post" action="{% url 'decks:archive_deck' deck.pk %}">
+                        {% csrf_token %}
+                        <button type="button" class="nav-icon-btn" aria-label="{% if deck.is_archive %}Restore deck{% else %}Archive deck{% endif %}"
+                            data-modal-open
+                            data-modal-message="{% if deck.is_archive %}Restore{% else %}Archive{% endif %} this deck and all its cards?"
+                            data-modal-confirm="{% if deck.is_archive %}Restore{% else %}Archive{% endif %}"
+                            data-modal-type="{% if deck.is_archive %}success{% else %}warning{% endif %}">
+                            <svg class="size-5 {% if deck.is_archive %}text-success{% else %}text-warning{% endif %}" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <use href="{% static 'icons/sprite.svg' %}#{% if deck.is_archive %}arrow-uturn-left{% else %}archive-box{% endif %}"></use>
+                            </svg>
+                        </button>
+                    </form>
+                    {% if not deck.is_archive %}
+                    <a href="{% url 'decks:edit_deck' deck.pk %}" class="nav-icon-btn">
+                        <svg class="size-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <use href="{% static 'icons/sprite.svg' %}#pencil-square"></use>
                         </svg>
-                    </button>
-                </form>
-
-                {# archive or restore #}
-                <form method="post" action="{% url 'decks:archive_deck' deck.pk %}">
-                    {% csrf_token %}
-                    <button type="button" class="nav-icon-btn" aria-label="{% if deck.is_archive %}Restore deck{% else %}Archive deck{% endif %}"
-                        data-modal-open
-                        data-modal-message="{% if deck.is_archive %}Restore{% else %}Archive{% endif %} this deck and all its cards?"
-                        data-modal-confirm="{% if deck.is_archive %}Restore{% else %}Archive{% endif %}"
-                        data-modal-type="{% if deck.is_archive %}success{% else %}warning{% endif %}">
-                        <svg class="size-5 {% if deck.is_archive %}text-success{% else %}text-warning{% endif %}" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                            <use href="{% static 'icons/sprite.svg' %}#{% if deck.is_archive %}arrow-uturn-left{% else %}archive-box{% endif %}"></use>
-                        </svg>
-                    </button>
-                </form>
-                {% if not deck.is_archive %}
-                <a href="{% url 'decks:edit_deck' deck.pk %}" class="nav-icon-btn">
-                    <svg class="size-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                        <use href="{% static 'icons/sprite.svg' %}#pencil-square"></use>
-                    </svg>
-                </a>
-                {% endif %}
+                    </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
         {% empty %}

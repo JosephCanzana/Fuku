@@ -16,4 +16,17 @@ urlpatterns = [
     path("tags/add/", views.add_tag, name="add_tag"),
     path("tags/<int:pk>/edit/", views.edit_tag, name="edit_tag"),
     path("tags/<int:pk>/delete/", views.delete_tag, name="delete_tag"),
+
+    # Flashcard
+    path("decks/<int:deck_pk>/", views.deck_detail, name="deck_detail"),
+    path("decks/<int:deck_pk>/review/", views.review_deck, name="review_deck"),
+    path("decks/<int:deck_pk>/cards/add/", views.add_card, name="add_card"),
+    path("decks/<int:deck_pk>/import/", views.import_flashcard, name="import_flashcard"),
+    path("decks/<int:deck_pk>/export/", views.export_flashcard, name="export_flashcard"),
+    path("decks/<int:deck_pk>/generate/", views.flashcard_generate, name="flashcard_generate"),
+    path("decks/<int:deck_pk>/undo/", views.undo, name="undo"),
+
+    path("cards/<int:card_pk>/edit/", views.edit_card, name="edit_card"),
+    path("cards/<int:card_pk>/delete/", views.delete_card, name="delete_card"),
+    path("cards/<int:card_pk>/rate/", views.rate_card, name="rate_card"),
 ]
