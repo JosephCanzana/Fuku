@@ -1,9 +1,11 @@
+import csv
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponse
 from django.contrib import messages
 from django.utils import timezone
+from django.utils.text import slugify
 from apps.decks.forms import DeckForm, TagForm, FlashcardForm
 from apps.decks.models import Deck, Tag, Flashcard
 from apps.decks.services import apply_review
@@ -235,8 +237,20 @@ def import_flashcard(request, deck_pk):
 @login_required
 def export_flashcard(request, deck_pk):
     # Create a CSV of flashcard and download
-    ...
+    deck = get_object_or_404(Deck, pk=deck_pk, account=request.user)
+    cards = Flashcard.objects.filter(deck=deck.id)
 
+    # File where th
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = f'attachment; filename="{slugify(deck.name) or "deck"}.csv"'
+    writer = csv.writer(response)
+
+    # convert to csv
+    for card in cards:
+        choices_text = ";".join(card.choices) if card.choices else ""
+        writer.writerow([card.question, card.answer, choices_text])
+    
+    return response
 
 @login_required
 def flashcard_generate(request, deck_pk):

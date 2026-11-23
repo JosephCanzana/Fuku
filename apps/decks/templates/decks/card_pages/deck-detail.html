@@ -19,6 +19,7 @@
             </div>
         </div>
         <div class="flex gap-3">
+            <a href="{% url 'decks:export_flashcard' deck.pk %}" class="btn-primary">Export</a>
             <a href="{% url 'decks:review_deck' deck.pk %}" class="btn-primary">Review</a>
             <a href="{% url 'decks:add_card' deck.pk %}" class="btn-primary">Add card</a>
         </div>
