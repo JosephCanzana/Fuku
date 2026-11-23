@@ -103,9 +103,9 @@
                         ratingForm.querySelector(`button[value="${e.key}"]`).click();
                     }
                 } else if (e.key === "+" || e.key === "=") {
-                    console.log("add")
+                    changeSize(1);
                 } else if (e.key === "-") {
-                    console.log("minus")
+                    changeSize(-1);
                 }
             });
 
