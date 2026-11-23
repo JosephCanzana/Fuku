@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.http import HttpResponseBadRequest
 from django.contrib import messages
+from django.utils import timezone
 from apps.decks.forms import DeckForm, TagForm, FlashcardForm
 from apps.decks.models import Deck, Tag, Flashcard
+from apps.decks.services import apply_review
 
 # DECKS
 @login_required
@@ -133,14 +136,40 @@ def deck_detail(request, deck_pk):
 @login_required
 def review_deck(request, deck_pk):
     # Form of individual flashcard that would recieve a post with rating
-    return render(request, "decks/card_pages/review.html")
+    deck = get_object_or_404(Deck, pk=deck_pk, account=request.user)
+    now = timezone.now()
+    deck_cards = Flashcard.objects.filter(deck=deck)
+
+    # real due cards first
+    card = deck_cards.filter(next_review_at__lte=now).order_by("next_review_at").first()
+
+    # pull in a learning card early if theres no due cards
+    if card is None:
+        card = (
+            deck_cards
+            .filter(state=Flashcard.State.LEARNING)
+            .order_by("next_review_at")
+            .first()
+        )
+
+    return render(request, "decks/card_pages/review.html", {"deck": deck, "card": card})
 
 
 @login_required
 @require_POST
 def rate_card(request, card_pk):
     # Form of individual flashcard that would recieve a post with rating
-    ...
+    card = get_object_or_404(Flashcard, pk=card_pk, deck__account=request.user)
+
+    try:
+        rating = int(request.POST.get("rating", ""))
+    except ValueError:
+        return HttpResponseBadRequest("Invalid rating")
+    if rating not in (1, 2, 3, 4):
+        return HttpResponseBadRequest("Invalid rating")
+
+    apply_review(card, rating)    
+    return redirect("decks:review_deck", deck_pk=card.deck_id)
 
 
 @login_required
@@ -191,9 +220,10 @@ def edit_card(request, card_pk):
 def delete_card(request, card_pk):
     # Delete specific card
     card = get_object_or_404(Flashcard, pk=card_pk, deck__account=request.user)
+    deck_id = card.deck_id
     card.delete()
     messages.success(request, "Card deleted.")
-    return redirect("decks:deck_detail", deck_pk=card.deck.pk)
+    return redirect("decks:deck_detail", deck_pk=deck_id)
 
 
 @login_required

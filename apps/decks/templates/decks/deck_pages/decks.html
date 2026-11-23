@@ -26,7 +26,8 @@
             transition duration-200 ease-out
             hover:-translate-y-0.5 hover:border-accent hover:shadow-md">
             <div class="flex flex-col gap-2">
-                <a href="{% url 'decks:deck_detail' deck.pk %}" class="font-medium after:absolute after:inset-0 after:rounded-2xl focus-visible:after:ring-2 focus-visible:after:ring-ring focus-visible:outline-none">
+                <a href="{% if not deck.is_archive %}{% url 'decks:deck_detail' deck.pk %}{% else %}#{% endif %}"
+                class="font-medium after:absolute after:inset-0 after:rounded-2xl focus-visible:after:ring-2 focus-visible:after:ring-ring focus-visible:outline-none">
                     {{ deck.name }}
                 </a>
                 {% if deck.tag %}
