@@ -4,11 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.contrib import messages
+from django.db import transaction
 from django.utils import timezone
 from django.utils.text import slugify
-from apps.decks.forms import DeckForm, TagForm, FlashcardForm
+from apps.decks.forms import DeckForm, TagForm, FlashcardForm, ImportForm
 from apps.decks.models import Deck, Tag, Flashcard
-from apps.decks.services import apply_review
+from apps.decks.services import apply_review, parse_csv
 
 # DECKS
 @login_required
@@ -231,7 +232,27 @@ def delete_card(request, card_pk):
 @login_required
 def import_flashcard(request, deck_pk):
     # Import CSV of flashcard
-    return render(request, "decks/card_pages/import.html")
+    deck = get_object_or_404(Deck, pk=deck_pk, account=request.user)
+
+    if request.method == "POST":
+        form = ImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            rows, skipped = parse_csv(form.cleaned_data["file"])
+            cards = [
+                Flashcard(deck=deck, question=q, answer=a,choices=c)
+                for q, a, c in rows
+            ]
+
+            # all or nothing if something went wrong in bulk add it would all be cancelled
+            with transaction.atomic():
+                Flashcard.objects.bulk_create(cards)
+
+            messages.success(request, f"Imported {len(cards)}, skipped {skipped}")
+            return redirect("decks:deck_detail", deck_pk=deck.pk)
+    else:
+        form = ImportForm()
+
+    return render(request, "decks/card_pages/import.html", {"form":form, "deck":deck})
 
 
 @login_required

@@ -1,12 +1,18 @@
+import csv
+import io
 from datetime import timedelta
 from django.utils import timezone
 from apps.decks.models import Flashcard
 
+# Apply review global variables
 AGAIN, HARD, GOOD, EASY = 1, 2, 3, 4
 LEARNING_STEPS = [1, 6, 10]
 QUALITY = {AGAIN: 1, HARD: 3, GOOD: 4, EASY: 5}
 GRADUATING_INTERVAL = 1
 EASY_INTERVAL = 4
+
+# parse csv global variable
+HEADER = ["question", "answer", "choices"]
 
 def apply_review(card:Flashcard, rating:int):
     if card.state in (Flashcard.State.NEW, Flashcard.State.LEARNING):
@@ -33,6 +39,7 @@ def apply_review(card:Flashcard, rating:int):
             card.state = Flashcard.State.LEARNING
             card.step = step
             card.next_review_at = timezone.now() + timedelta(minutes=LEARNING_STEPS[step])
+
     else:
         q = QUALITY[rating]
         d = 5 - q
@@ -60,3 +67,46 @@ def apply_review(card:Flashcard, rating:int):
 
     # Save all changes
     card.save()
+
+
+def parse_choices(raw):
+    # Conver a;b;c to a list
+    if not raw or not raw.strip():
+        return None
+
+    choices = [c.strip() for c in raw.split(";") if c.strip()]
+    return choices or None
+
+
+def parse_csv(file):
+    # return (rows, skipped). each row is question, answer, choices
+    text = file.read().decode("utf-8-sig")
+    reader = csv.reader(io.StringIO(text, newline=""))
+
+    rows = []
+    skipped = 0
+
+    for i, row in enumerate(reader):
+        # Blank line skip
+        if not row:
+            continue
+
+        # Header row
+        if i == 0 and [c.strip().lower() for c in row[:3]] == HEADER:
+            continue
+
+        # Minimum row contents should have questiona and answer
+        if len(row) < 2:
+            skipped += 1
+            continue
+
+        question, answer = row[0].strip(), row[1].strip()
+        if not question or not answer:
+            skipped += 1
+            continue
+
+        choices = parse_choices(row[2]) if len(row) > 2 else None
+        rows.append((question, answer, choices))
+
+
+    return rows, skipped

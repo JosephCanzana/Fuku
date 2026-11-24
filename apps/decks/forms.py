@@ -1,5 +1,6 @@
 from django import forms
 from apps.decks.models import Deck, Tag, Flashcard
+from apps.decks.services import parse_choices
 
 class DeckForm(forms.ModelForm):
     def __init__(self, *args, user, **kwargs):
@@ -73,8 +74,27 @@ class FlashcardForm(forms.ModelForm):
             self.initial["choices"] = ";".join(self.instance.choices)
 
     def clean_choices(self):
-        raw = self.cleaned_data["choices"]
-        if not raw.strip():
-            return None
-        # Turn raw ; choices into a list
-        return [c.strip() for c in raw.split(";") if c.strip()]
+        return  parse_choices(self.cleaned_data["choices"])
+
+
+class ImportForm(forms.Form):
+    file = forms.FileField(
+        label="CSV file",
+        help_text="Columns: question, answer, choices (separated by semicolons).",
+        widget=forms.ClearableFileInput(attrs={"accept": ".csv"}),
+    )
+
+    def clean_file(self):
+        file = self.cleaned_data["file"]
+
+        if not file.name.lower().endswith(".csv"):
+            raise forms.ValidationError("Please upload a .csv file.")
+
+        try:
+            file.read().decode("utf-8-sig")
+        except UnicodeDecodeError:
+            raise forms.ValidationError("File must be UTF-8 text.")
+        finally:
+            file.seek(0)
+
+        return file
