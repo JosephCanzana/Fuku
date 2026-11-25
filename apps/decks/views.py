@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -171,6 +172,22 @@ def rate_card(request, card_pk):
     if rating not in (1, 2, 3, 4):
         return HttpResponseBadRequest("Invalid rating")
 
+    # Save the old values BEFORE apply_review changes them
+    snapshot = {
+        "pk": card.pk,
+        "state": card.state,
+        "step": card.step,
+        "interval": card.interval,
+        "ease_factor": card.ease_factor,
+        "repetition_count": card.repetition_count,
+        "next_review_at": card.next_review_at.isoformat(),
+    }
+    # Get the undo stack or empty list if it is not yeat created
+    stack = request.session.get("undo_stack", [])
+    stack.append(snapshot)
+    # old to oldest order
+    request.session["undo_stack"] = stack[-20:]
+
     apply_review(card, rating)    
     return redirect("decks:review_deck", deck_pk=card.deck_id)
 
@@ -179,7 +196,31 @@ def rate_card(request, card_pk):
 @require_POST
 def undo(request, deck_pk):
     # undo the previous card rate
-    ...
+    deck = get_object_or_404(Deck, pk=deck_pk, account=request.user)
+    stack = request.session.get("undo_stack", [])
+    if not stack:
+        messages.info(request, "Nothing to undo.")
+        return redirect("decks:review_deck", deck_pk=deck.pk)
+
+    snapshot = stack.pop()
+    card = get_object_or_404(Flashcard, pk=snapshot["pk"], deck__account=request.user)
+    if card.deck_id != deck.pk:
+        messages.error(request, "The last rating was in a different deck.")
+        return redirect("decks:review_deck", deck_pk=deck.pk)
+
+    # Revert all changes
+    card.state = snapshot["state"]
+    card.step = snapshot["step"]
+    card.interval = snapshot["interval"]
+    card.ease_factor = snapshot["ease_factor"]
+    card.repetition_count = snapshot["repetition_count"]
+    card.next_review_at = datetime.fromisoformat(snapshot["next_review_at"])
+
+    # Save changes
+    card.save()
+    request.session["undo_stack"] = stack
+    messages.success(request, "Rating undone.")
+    return redirect("decks:review_deck", deck_pk=deck.pk)
 
 
 @login_required

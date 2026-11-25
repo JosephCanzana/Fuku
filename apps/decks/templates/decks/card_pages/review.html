@@ -5,13 +5,20 @@
 
 {% block content %}
 <div class="flex w-full h-full flex-col items-center justify-between text-txt-primary">
-    <div class="mb-6 gap-2 flex items-center justify-between">
+    <div class="mb-6 flex w-full max-w-3xl items-center gap-2">
         <a href="{% url 'decks:deck_detail' deck.pk %}" class="back-btn">
             <svg class="size-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <use href="{% static 'icons/sprite.svg' %}#chevron-left"></use>
             </svg>
         </a>
         <h1 class="text-2xl font-bold">{{ deck.name }}</h1>
+
+        <form method="post" action="{% url 'decks:undo' deck.pk %}" class="ml-auto">
+            {% csrf_token %}
+            <button type="submit" id="undo-btn" class="rounded-md border border-border px-3 py-1.5 text-sm text-txt-secondary hover:bg-hover">
+                Undo <span class="text-xs opacity-70">(U)</span>
+            </button>
+        </form>
     </div>
 
     {% if card %}
@@ -34,16 +41,26 @@
         </div>
 
        <div class="sticky bottom-0 z-10 mt-4 w-full max-w-3xl bg-main py-3">
-            <button type="button" id="show-answer" class="btn-primary w-full">Show answer</button>
+            <button type="button" id="show-answer" class="btn-primary w-full">
+                Show answer <span class="text-xs opacity-70">(space)</span>
+            </button>
 
             <form id="rating-form" method="post" hidden
                   action="{% url 'decks:rate_card' card.pk %}"
                   class="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {% csrf_token %}
-                <button name="rating" value="1" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">Again</button>
-                <button name="rating" value="2" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">Hard</button>
-                <button name="rating" value="3" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">Good</button>
-                <button name="rating" value="4" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">Easy</button>
+                <button name="rating" value="1" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">
+                    Again <span class="text-xs opacity-70">(1)</span>
+                </button>
+                <button name="rating" value="2" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">
+                    Hard <span class="text-xs opacity-70">(2)</span>
+                </button>
+                <button name="rating" value="3" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">
+                    Good <span class="text-xs opacity-70">(3)</span>
+                </button>
+                <button name="rating" value="4" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">
+                    Easy <span class="text-xs opacity-70">(4)</span>
+                </button>
             </form>
         </div>
 
@@ -111,10 +128,18 @@
 
         </script>
     {% else %}
-        <div class="card-primary flex min-h-64 w-full max-w-3xl flex-col items-center justify-center gap-4 text-center">
+        <div class="card-primary my-auto flex min-h-64 w-full max-w-3xl flex-col items-center justify-center gap-4 text-center">
             <p class="text-xl font-semibold">All done for now</p>
             <a href="{% url 'decks:deck_detail' deck.pk %}" class="btn-primary">Back to deck</a>
         </div>
     {% endif %}
+    <script>
+        document.addEventListener("keydown", (e) => {
+            if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+            if (e.key === "u" || e.key === "U") {
+                document.getElementById("undo-btn").click();
+            }
+        });
+    </script>
 </div>
 {% endblock %}
