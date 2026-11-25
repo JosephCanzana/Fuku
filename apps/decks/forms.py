@@ -1,6 +1,9 @@
 from django import forms
 from apps.decks.models import Deck, Tag, Flashcard
 from apps.decks.services import parse_choices
+from apps.decks.ai import MODES, MAX_NOTES_CHARS
+
+MODE_LABELS = {"general": "General study", "exam": "Exam review"}
 
 class DeckForm(forms.ModelForm):
     def __init__(self, *args, user, **kwargs):
@@ -98,3 +101,30 @@ class ImportForm(forms.Form):
             file.seek(0)
 
         return file
+
+
+class GenerateForm(forms.Form):
+    notes = forms.CharField(
+        label="Your notes",
+        max_length=MAX_NOTES_CHARS,
+        widget=forms.Textarea(attrs={
+            "class": "textarea-primary",
+            "rows": 10,
+            "placeholder": "Paste your notes or quiz items here",
+        }),
+    )
+    mode = forms.ChoiceField(
+        label="Card style",
+        choices=[(key, MODE_LABELS[key]) for key in MODES],
+        initial="general",
+        widget=forms.Select(attrs={"class": "input-primary"}),
+    )
+    custom = forms.CharField(
+        label="Extra preferences (optional)",
+        required=False,
+        max_length=300,
+        widget=forms.TextInput(attrs={
+            "class": "input-primary",
+            "placeholder": "e.g. focus on definitions",
+        }),
+    )

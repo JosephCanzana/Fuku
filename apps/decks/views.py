@@ -1,5 +1,6 @@
 import csv
 from datetime import datetime
+from google.genai import errors
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -8,9 +9,10 @@ from django.contrib import messages
 from django.db import transaction
 from django.utils import timezone
 from django.utils.text import slugify
-from apps.decks.forms import DeckForm, TagForm, FlashcardForm, ImportForm
+from apps.decks.forms import DeckForm, TagForm, FlashcardForm, ImportForm, GenerateForm
 from apps.decks.models import Deck, Tag, Flashcard
-from apps.decks.services import apply_review, parse_csv
+from apps.decks.services import apply_review, parse_csv, parse_txt_csv
+from apps.decks.ai import generate_csv, AIUnavailable
 
 # DECKS
 @login_required
@@ -314,8 +316,39 @@ def export_flashcard(request, deck_pk):
     
     return response
 
+
+# AI CSV GENERATE
 @login_required
 def flashcard_generate(request, deck_pk):
-    # Form with the desired file that will be used to create flashcard
-    # it would return a CSV file from the AI
-    return render(request, "decks/card_pages/generate.html")
+    deck = get_object_or_404(Deck, pk=deck_pk, account=request.user)
+
+    if request.method == "POST":
+        form = GenerateForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            try:
+                # Pass to ai and generate the text
+                text, max_cards = generate_csv(data["notes"], data["mode"], data["custom"])
+            
+            except (AIUnavailable, errors.APIError):
+                form.add_error(None, "The AI service is busy or unavailable. Please try again in a minute.")
+            
+            else:
+                rows, _ = parse_txt_csv(text)
+                rows = rows[:max_cards]
+                if not rows:
+                    form.add_error(None, "No cards could be made from this text.")
+                else:
+                    # Create list of flashcard object then build all at once
+                    cards = [
+                        Flashcard(deck=deck, question=q, answer=a, choices=c)
+                        for q, a, c in rows
+                    ]
+                    with transaction.atomic():
+                        Flashcard.objects.bulk_create(cards)
+                    messages.success(request, f"Created {len(cards)} cards.")
+                    return redirect("decks:deck_detail", deck_pk=deck.pk)
+    else:
+        form = GenerateForm()
+
+    return render(request, "decks/card_pages/generate.html", {"form": form, "deck": deck})

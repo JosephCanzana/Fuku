@@ -1,10 +1,71 @@
 {% extends "base-app.html" %}
 {% load static %}
 
-{% block title %}Deck detail{% endblock %}
+{% block title %}Generate cards · {{ deck.name }}{% endblock %}
 
 {% block content %}
-<div class="w-full text-txt-primary">
-    This is the generate page
+<div class="flex w-full justify-center items-center flex-col">
+    <div class="mb-6 flex items-center justify-between">
+        <div class="flex items-center justify-center gap-2">
+            <a href="{% url 'decks:deck_detail' deck.pk %}" class="back-btn">
+                <svg class="size-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <use href="{% static 'icons/sprite.svg' %}#chevron-left"></use>
+                </svg>
+            </a>
+            <div>
+                <h1 class="text-2xl font-bold text-txt-primary">{{ deck.name }}</h1>
+            </div>
+        </div>
+    </div>
+    <form method="post" id="generate-form" class="card-primary flex w-full max-w-3xl flex-col gap-4">
+        {% csrf_token %}
+        <h1 class="text-2xl font-bold text-txt-primary">Generate cards with AI</h1>
+
+        {% for error in form.non_field_errors %}
+            <p class="text-sm text-danger">{{ error }}</p>
+        {% endfor %}
+
+        <div>
+            <label class="mb-1 block text-txt-primary" for="{{ form.notes.id_for_label }}">{{ form.notes.label }}</label>
+            {{ form.notes }}
+            {% for error in form.notes.errors %}
+                <p class="text-sm text-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2">
+            <div>
+                <label class="mb-1 block text-txt-primary" for="{{ form.mode.id_for_label }}">{{ form.mode.label }}</label>
+                {{ form.mode }}
+                {% for error in form.mode.errors %}
+                    <p class="text-sm text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div>
+                <label class="mb-1 block text-txt-primary" for="{{ form.custom.id_for_label }}">{{ form.custom.label }}</label>
+                {{ form.custom }}
+                {% for error in form.custom.errors %}
+                    <p class="text-sm text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <p class="text-xs text-txt-secondary">
+            Your text is sent to a third-party AI service to create the cards. Don't paste private information.
+        </p>
+
+        <div class="flex justify-end gap-3">
+            <a href="{% url 'decks:deck_detail' deck.pk %}" class="rounded-md border border-border px-4 py-2 text-sm text-txt-primary hover:bg-hover">Cancel</a>
+            <button type="submit" id="generate-btn" class="btn-primary">Generate</button>
+        </div>
+    </form>
 </div>
+
+<script>
+    document.getElementById("generate-form").addEventListener("submit", () => {
+        const btn = document.getElementById("generate-btn");
+        btn.disabled = true;
+        btn.textContent = "Generating...";
+    });
+</script>
 {% endblock %}

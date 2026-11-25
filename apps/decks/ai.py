@@ -76,6 +76,7 @@ def _models():
 
 # Build prompt according to the parameters
 def build_prompt(notes, mode, custom=""):
+    # Limit the max card
     max_cards = min(MAX_CARDS, max(5, len(notes) // 150))
 
     parts = [
