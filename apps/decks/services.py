@@ -81,8 +81,11 @@ def parse_choices(raw):
 def parse_csv(file):
     # return (rows, skipped). each row is question, answer, choices
     text = file.read().decode("utf-8-sig")
-    reader = csv.reader(io.StringIO(text, newline=""))
+    return parse_txt_csv(text)
 
+
+def parse_txt_csv(text):
+    reader = csv.reader(io.StringIO(text, newline=""))
     rows = []
     skipped = 0
 
@@ -95,7 +98,7 @@ def parse_csv(file):
         if i == 0 and [c.strip().lower() for c in row[:3]] == HEADER:
             continue
 
-        # Minimum row contents should have questiona and answer
+        # Minimum row contents should have questions and answer
         if len(row) < 2:
             skipped += 1
             continue
@@ -108,5 +111,10 @@ def parse_csv(file):
         choices = parse_choices(row[2]) if len(row) > 2 else None
         rows.append((question, answer, choices))
 
-
     return rows, skipped
+
+
+def clean_ai_csv(text):
+    lines = text.splitlines()
+    kept = [line for line in lines if not line.strip().startswith("```")]
+    return "\n".join(kept).strip()

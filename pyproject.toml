@@ -8,4 +8,5 @@ dependencies = [
     "django-unfold",
     "psycopg[binary]>=3.3.8",
     "python-decouple>=3.8",
+    "google-genai",
 ]
