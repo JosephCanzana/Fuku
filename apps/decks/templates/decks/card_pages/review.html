@@ -49,13 +49,13 @@
                   action="{% url 'decks:rate_card' card.pk %}"
                   class="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {% csrf_token %}
-                <button name="rating" value="1" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">
+                <button name="rating" value="1" class="rounded-lg border border-border px-4 py-3 hover:bg-hover hover:border-danger text-danger">
                     Again <span class="text-xs opacity-70">(1)</span>
                 </button>
                 <button name="rating" value="2" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">
                     Hard <span class="text-xs opacity-70">(2)</span>
                 </button>
-                <button name="rating" value="3" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">
+                <button name="rating" value="3" class="rounded-lg border border-border px-4 py-3 hover:bg-hover hover:border-accent text-accent">
                     Good <span class="text-xs opacity-70">(3)</span>
                 </button>
                 <button name="rating" value="4" class="rounded-lg border border-border px-4 py-3 hover:bg-hover">

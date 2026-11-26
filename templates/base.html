@@ -6,6 +6,18 @@
     {% load static %}
     <link href="{% static 'css/output.css' %}" rel="stylesheet">
     <title>{% block title %}Fuku{% endblock %}</title>
+    
+    <script>
+        // get the theme every reload
+        (function () {
+            try {
+                var t = localStorage.getItem("theme");
+                if (["gray", "light", "dark"].includes(t)) {
+                    document.documentElement.dataset.theme = t;
+                }
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body class="bg-main h-screen w-screen font-main">
     {% block base %}
@@ -59,6 +71,35 @@
             input.type = show ? "text" : "password";
             btn.textContent = show ? "Hide" : "Show";
             btn.setAttribute("aria-pressed", show);
+        });
+    </script>
+
+    
+    <script>
+        const THEMES = ["gray", "light", "dark"];
+
+        function applyTheme(theme) {
+            document.documentElement.dataset.theme = theme;
+            document.querySelectorAll("[data-theme-icon]").forEach((icon) => {
+                icon.classList.toggle("hidden", icon.dataset.themeIcon !== theme);
+            });
+            document.querySelectorAll("[data-theme-cycle]").forEach((btn) => {
+                btn.setAttribute("aria-label", `Theme: ${theme}. Click to change.`);
+            });
+        }
+
+        // Default theme at first usage
+        applyTheme(document.documentElement.dataset.theme || "gray");
+
+        // Cycle through every theme
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest("[data-theme-cycle]");
+            if (!btn) return;
+
+            const current = document.documentElement.dataset.theme || "gray";
+            const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
+            applyTheme(next);
+            try { localStorage.setItem("theme", next); } catch (err) {}
         });
     </script>
 </body>

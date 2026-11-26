@@ -1,3 +1,4 @@
+{% load static %}
 <nav class="sticky top-0 z-50 h-12 bg-surface border-b border-border">
     <div class="mx-auto flex h-full max-w-7xl items-center justify-between px-4">
         {# logo #}
@@ -6,6 +7,18 @@
 
         {# login, sign up, and theme #}
         <div class="flex items-center gap-2">
+            <button type="button" data-theme-cycle aria-label="Change theme"
+                    class="rounded-md p-2 text-txt-secondary transition-colors hover:bg-hover hover:text-txt-primary">
+                <svg data-theme-icon="gray" class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <use href="{% static 'icons/sprite.svg' %}#swatch"></use>
+                </svg>
+                <svg data-theme-icon="light" class="size-5 hidden" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <use href="{% static 'icons/sprite.svg' %}#sun"></use>
+                </svg>
+                <svg data-theme-icon="dark" class="size-5 hidden" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <use href="{% static 'icons/sprite.svg' %}#moon"></use>
+                </svg>
+            </button>
             <a href="{% url 'accounts:login' %}" class="rounded-md px-3 py-1 text-txt-secondary hover:bg-hover hover:text-txt-primary">Log in</a>
             <a href="{% url 'accounts:sign_up' %}" class="btn-primary px-3 py-1 rounded-md">Sign up</a>
         </div>

@@ -24,9 +24,30 @@
             </svg>
             <span class="sidebar-span">Tags</span>
         </a>
+        {% if user.is_staff %}
+            <a href="{% url 'admin:index' %}" class="sidebar-link">
+                <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <use href="{% static 'icons/sprite.svg' %}#shield-check"></use>
+                </svg>
+                <span class="sidebar-span">Admin</span>
+            </a>
+        {% endif %}
         
     </nav>
     <nav class="flex flex-col gap-1 p-2">
+        <button type="button" data-theme-cycle aria-label="Change theme"
+                class="sidebar-link">
+            <svg data-theme-icon="gray" class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <use href="{% static 'icons/sprite.svg' %}#swatch"></use>
+            </svg>
+            <svg data-theme-icon="light" class="size-5 hidden" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <use href="{% static 'icons/sprite.svg' %}#sun"></use>
+            </svg>
+            <svg data-theme-icon="dark" class="size-5 hidden" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <use href="{% static 'icons/sprite.svg' %}#moon"></use>
+            </svg>
+            <span class="sidebar-span">Theme</span>
+        </button>
         <a href="{% url 'pages:about_page' %}" class="sidebar-link">
             <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <use href="{% static 'icons/sprite.svg' %}#information"></use>
