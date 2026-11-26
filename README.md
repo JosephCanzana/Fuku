@@ -1,14 +1,12 @@
 # Fuku: spaced-repetition flashcard web app
 
-#### Video Demo: <URL HERE>
+#### Video Demo: https://youtu.be/e5ZxpgShtg4?si=I7l1VkMyNY0NsgKd
 
 #### Description:
 **Fuku** is a spaced-repetition flashcard app that uses the SM-2 algorithm. You can write your own cards, import them from CSV, or generate them from your notes with AI, then review them on a schedule that shows each card right before you would forget it.
 
 ## Why I built it
 I struggled with creating reviewers. I then found out that you can generate flashcards with AI, optimize the prompt to get good cards, and review them in a third-party app. That made me wonder what would happen if one app made this whole process frictionless. Fuku is that app: notes in, flashcards out, review in the same place.
-
-## How to run it
 
 ### Requirements
 - [Docker](https://docs.docker.com/get-docker/) with Docker Compose
@@ -55,7 +53,7 @@ I struggled with creating reviewers. I then found out that you can generate flas
 
 6. Build the CSS (use `--watch` instead of a single build while developing):
    ```bash
-   ./theme/tailwindcss -i static/css/input.css -o static/css/output.css --watch
+   make watch-tailwind
    ```
 
 Then open http://127.0.0.1:8000. The Django admin is at `/admin/`.
