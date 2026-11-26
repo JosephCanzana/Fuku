@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+from django.db.models import Count, Q
+from django.utils import timezone
 from django.shortcuts import render, redirect
 from apps.accounts.forms import SignUpForm, LoginForm
 from apps.accounts.models import User
@@ -6,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from apps.decks.models import Deck
 
 
 # Create your views here.
@@ -46,4 +48,14 @@ def logout_view(request):
 
 @login_required
 def user_dashboard(request):
-    return render(request, "accounts/user-dashboard.html")
+    now = timezone.now()
+    decks = Deck.objects.filter(account=request.user).annotate(
+        card_count=Count("flashcard"),
+        due_count=Count("flashcard", filter=Q(flashcard__next_review_at__lte=now)),
+    )
+    return render(request, "accounts/user-dashboard.html", {
+        "decks": decks,
+        "deck_count": len(decks),
+        "total_cards": sum(d.card_count for d in decks),
+        "total_due": sum(d.due_count for d in decks),
+    })

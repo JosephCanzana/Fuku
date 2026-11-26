@@ -3,8 +3,65 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="text-txt-primary">
-    This is Dashboard
+<div class="mx-auto flex w-full flex-col gap-8 text-txt-primary">
 
+    <div>
+        <h1 class="text-3xl font-bold">Welcome back, {{ user.username }}</h1>
+        <p class="mt-1 text-txt-secondary">
+            {% if total_due %}
+                You have <span class="font-semibold text-accent">{{ total_due }} card{{ total_due|pluralize }}</span> waiting for review.
+            {% else %}
+                Nothing is due right now. Nice work!
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div class="card-primary flex flex-col gap-1">
+            <span class="text-sm text-txt-secondary">Due today</span>
+            <span class="text-4xl font-bold text-accent">{{ total_due }}</span>
+        </div>
+        <div class="card-primary flex flex-col gap-1">
+            <span class="text-sm text-txt-secondary">Decks</span>
+            <span class="text-4xl font-bold">{{ deck_count }}</span>
+        </div>
+        <div class="card-primary flex flex-col gap-1">
+            <span class="text-sm text-txt-secondary">Total cards</span>
+            <span class="text-4xl font-bold">{{ total_cards }}</span>
+        </div>
+    </div>
+
+    <div>
+        <h2 class="mb-3 text-lg font-semibold">Your decks</h2>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {% for deck in decks %}
+                <div class="card-primary relative flex min-h-40 flex-col justify-between transition duration-200 ease-out hover:-translate-y-0.5 hover:border-accent hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+                    <div>
+                        <a href="{% url 'decks:deck_detail' deck.pk %}" class="block truncate text-lg font-semibold after:absolute after:inset-0">
+                            {{ deck.name }}
+                        </a>
+                        <p class="mt-1 text-sm text-txt-secondary">
+                            {{ deck.card_count }} card{{ deck.card_count|pluralize }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        {% if deck.due_count %}
+                            <span class="rounded-full border border-accent px-2.5 py-0.5 text-xs text-accent">{{ deck.due_count }} due</span>
+                            <a href="{% url 'decks:review_deck' deck.pk %}" class="btn-primary relative z-10">Review</a>
+                        {% else %}
+                            <span class="text-xs text-txt-secondary">All caught up</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="card-primary col-span-full flex flex-col items-center gap-2 py-12 text-center">
+                    <p class="text-lg font-semibold">No decks yet</p>
+                    <p class="text-sm text-txt-secondary">Create your first deck to start learning.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}

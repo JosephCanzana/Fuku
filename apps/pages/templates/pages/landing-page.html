@@ -1,10 +1,127 @@
 {% extends "base-public.html" %}
 
-{% block title %}
-{% endblock %}
+{% block title %}Fuku · Spaced-repetition flashcards{% endblock %}
 
 {% block content %}
-    <div class="flex p-4 rounded text-txt-primary text-center">
-        hello! This is the landing page
-    </div>
+<div class="relative isolate flex min-w-0 w-full flex-col scroll-smooth text-txt-primary">
+    <div class="pointer-events-none absolute left-1/2 top-0 -z-10 h-80 w-80 -translate-x-1/2 rounded-full bg-accent/10 blur-3xl"></div>
+
+    <section class="flex flex-col items-center gap-8 px-4 py-10 sm:px-6 md:py-14">
+        <div class="flex max-w-2xl flex-col items-center gap-4 text-center">
+            <span class="rounded-full border border-border px-3 py-1 text-xs text-txt-secondary">Spaced repetition · SM-2 · AI generation</span>
+            <h1 class="text-4xl font-bold tracking-tight md:text-5xl">
+                <span class="text-accent">Fuku</span>shuu
+            </h1>
+            <p class="text-lg text-txt-secondary">
+                Fuku turns your notes into flashcards and shows each one right before you would forget it,
+                so your study time goes to what actually needs it.
+            </p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="{% url 'accounts:sign_up' %}" class="btn-primary">Get started free</a>
+                <a href="{% url 'accounts:login' %}" class="rounded-md border border-border px-4 py-2 text-sm hover:bg-hover">Log in</a>
+            </div>
+        </div>
+
+        <div class="card-primary flex w-full max-w-md flex-col gap-4 text-center shadow-md">
+            <span class="text-xs uppercase tracking-wide text-txt-secondary">Example card</span>
+            <p class="text-xl font-semibold">Refers to going back over previously learned material to reinforce memory. </p>
+            <div class="border-t border-border pt-3 text-lg text-txt-secondary">Fukushuu (復習)</div>
+            <div class="grid grid-cols-4 gap-2 text-sm">
+                <span class="rounded-lg border border-danger px-2 py-2 text-danger">Again</span>
+                <span class="rounded-lg border border-border px-2 py-2">Hard</span>
+                <span class="rounded-lg border border-accent px-2 py-2 text-accent">Good</span>
+                <span class="rounded-lg border border-border px-2 py-2">Easy</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="px-4 pb-10 sm:px-6">
+        <h2 class="mb-6 text-center text-2xl font-bold">Everything you need to review</h2>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="card-primary">
+                <h3 class="font-semibold">SM-2 scheduling</h3>
+                <p class="mt-1 text-sm text-txt-secondary">Each card is spaced by how well you remember it, with learning steps for new cards.</p>
+            </div>
+            <div class="card-primary">
+                <h3 class="font-semibold">AI card generation</h3>
+                <p class="mt-1 text-sm text-txt-secondary">Paste your notes and choose general study or exam review mode.</p>
+            </div>
+            <div class="card-primary">
+                <h3 class="font-semibold">Your own decks</h3>
+                <p class="mt-1 text-sm text-txt-secondary">Organize cards per deck, add tags, and write your own cards anytime.</p>
+            </div>
+            <div class="card-primary">
+                <h3 class="font-semibold">Import and export</h3>
+                <p class="mt-1 text-sm text-txt-secondary">Move decks in and out with plain CSV files.</p>
+            </div>
+            <div class="card-primary">
+                <h3 class="font-semibold">Made for speed</h3>
+                <p class="mt-1 text-sm text-txt-secondary">Keyboard shortcuts for revealing, rating and undoing a card.</p>
+            </div>
+            <div class="card-primary">
+                <h3 class="font-semibold">Undo</h3>
+                <p class="mt-1 text-sm text-txt-secondary">Rated a card by mistake? Take it back with one key.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="px-4 pb-10 sm:px-6">
+        <h2 class="mb-6 text-center text-2xl font-bold">How it works</h2>
+        <div class="grid gap-6 md:grid-cols-3">
+            <div class="flex flex-col gap-1">
+                <span class="text-3xl font-bold text-accent">1</span>
+                <h3 class="font-semibold">Add your material</h3>
+                <p class="text-sm text-txt-secondary">Write cards yourself, import a CSV, or paste notes and let AI draft them.</p>
+            </div>
+            <div class="flex flex-col gap-1">
+                <span class="text-3xl font-bold text-accent">2</span>
+                <h3 class="font-semibold">Review daily</h3>
+                <p class="text-sm text-txt-secondary">Reveal the answer, then rate how well you remembered it.</p>
+            </div>
+            <div class="flex flex-col gap-1">
+                <span class="text-3xl font-bold text-accent">3</span>
+                <h3 class="font-semibold">Remember longer</h3>
+                <p class="text-sm text-txt-secondary">Cards you know come back less often, and hard ones come back sooner.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="mt-auto border-t border-border px-4 py-10 sm:px-6">
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="flex flex-col gap-2">
+                <span class="text-lg font-bold text-txt-primary">Fuku</span>
+                <p class="text-sm text-txt-secondary">Notes in, flashcards out. Spaced repetition for people who would rather study than organize.</p>
+            </div>
+
+            <div class="flex flex-col gap-2 text-sm">
+                <span class="font-semibold text-txt-primary">Product</span>
+                <a href="#features" class="text-txt-secondary hover:text-txt-primary">Features</a>
+                <a href="#how-it-works" class="text-txt-secondary hover:text-txt-primary">How it works</a>
+                <a href="{% url 'accounts:sign_up' %}" class="text-txt-secondary hover:text-txt-primary">Get started</a>
+            </div>
+
+            <div class="flex flex-col gap-2 text-sm">
+                <span class="font-semibold text-txt-primary">Project</span>
+                <a href="#" class="text-txt-secondary hover:text-txt-primary">Video demo</a>
+                <span class="text-txt-secondary">CS50x final project</span>
+            </div>
+
+            <div class="flex flex-col gap-3 text-sm">
+                <span class="font-semibold text-txt-primary">Connect</span>
+                <div class="flex flex-wrap gap-2">
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="rounded-md border border-border px-3 py-1.5 text-txt-secondary transition-colors hover:border-accent hover:text-accent">YouTube</a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="rounded-md border border-border px-3 py-1.5 text-txt-secondary transition-colors hover:border-accent hover:text-accent">Facebook</a>
+                    <a href="mailto:your@gmail.com" class="rounded-md border border-border px-3 py-1.5 text-txt-secondary transition-colors hover:border-accent hover:text-accent">Gmail</a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="rounded-md border border-border px-3 py-1.5 text-txt-secondary transition-colors hover:border-accent hover:text-accent">GitHub</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 flex flex-col items-center justify-between gap-2 border-t border-border pt-6 text-xs text-txt-secondary sm:flex-row">
+            <span>© {% now "Y" %} Fuku. Made by Joseph Canzana.</span>
+            <span>Built with Django, Tailwind CSS and the Gemini API.</span>
+        </div>
+    </footer>
+</div>
 {% endblock %}

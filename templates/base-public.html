@@ -5,10 +5,12 @@
 {% block base %}
     <div class="flex h-dvh flex-col">
         {% include "includes/navbar.html" %}
-        <div class="mx-auto flex w-full max-w-7xl flex-1 min-h-0">
-            {# main content #}
-            {% block content %}
-            {% endblock %}
+        <div class="min-h-0 flex-1 overflow-y-auto">
+            <div class="mx-auto flex min-h-full w-full max-w-7xl">
+                {# main content #}
+                {% block content %}
+                {% endblock %}
+            </div>
         </div>
     </div>
 {% endblock %}

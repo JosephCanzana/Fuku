@@ -3,7 +3,75 @@
 {% block title %}About{% endblock %}
 
 {% block content %}
-<div class="text-txt-primary">
-    This is about page
+<div class="mx-auto flex w-full max-w-3xl flex-col gap-8 text-txt-primary">
+
+    <div>
+        <h1 class="text-3xl font-bold">About <span class="text-accent">Fuku</span></h1>
+        <p class="mt-2 text-lg text-txt-secondary">
+            A spaced-repetition flashcard app that uses the SM-2 algorithm.
+        </p>
+    </div>
+
+    <section class="card-primary flex flex-col gap-2">
+        <h2 class="text-lg font-semibold">Why I built it</h2>
+        <p class="text-sm text-txt-secondary">
+            I struggled with creating reviewers. Then I found out that you can generate flashcards with AI,
+            optimize the prompt to get good cards, and review them in a third-party app. That made me wonder:
+            what if one app made the whole process frictionless? Fuku is that app.
+        </p>
+    </section>
+
+    <section>
+        <h2 class="mb-3 text-lg font-semibold">Features</h2>
+        <div class="grid gap-3 sm:grid-cols-2">
+            <div class="card-primary text-sm">Review cards using the SM-2 algorithm</div>
+            <div class="card-primary text-sm">A learning state for new cards</div>
+            <div class="card-primary text-sm">Cards organized per deck, with tags</div>
+            <div class="card-primary text-sm">Create your own flashcards</div>
+            <div class="card-primary text-sm">Generate flashcards with AI</div>
+            <div class="card-primary text-sm">Exam or general generation mode</div>
+            <div class="card-primary text-sm sm:col-span-2">Import and export flashcards via CSV</div>
+        </div>
+    </section>
+
+    <section class="card-primary flex flex-col gap-3">
+        <h2 class="text-lg font-semibold">How it's built</h2>
+        <div class="flex flex-wrap gap-2 text-sm">
+            <span class="rounded-full border border-border px-3 py-1">Django</span>
+            <span class="rounded-full border border-border px-3 py-1">PostgreSQL</span>
+            <span class="rounded-full border border-border px-3 py-1">Tailwind CSS</span>
+            <span class="rounded-full border border-border px-3 py-1">JavaScript</span>
+            <span class="rounded-full border border-border px-3 py-1">HTML</span>
+            <span class="rounded-full border border-border px-3 py-1">Docker</span>
+            <span class="rounded-full border border-border px-3 py-1">Gemini API (free tier)</span>
+        </div>
+    </section>
+
+    <section class="card-primary flex flex-col gap-2">
+        <h2 class="text-lg font-semibold">Design decisions</h2>
+        <ul class="list-disc space-y-1 pl-5 text-sm text-txt-secondary">
+            <li>New cards go through a learning state instead of being scheduled in days right away.</li>
+            <li>The app uses the free Gemini API, so generation is limited to 20 cards and 5,000 characters of text for now.</li>
+            <li>This is an MVP, built within a limited time frame.</li>
+        </ul>
+    </section>
+
+    <section class="card-primary flex flex-col gap-2">
+        <h2 class="text-lg font-semibold">Challenges and what's next</h2>
+        <p class="text-sm text-txt-secondary">
+            The hardest parts were CSV import and export, because the files have to be parsed carefully, and the
+            AI generation, because the prompt has to be good for the cards to come out accurate.
+        </p>
+        <ul class="list-disc space-y-1 pl-5 text-sm text-txt-secondary">
+            <li>A better design and UI, with more themes and customization</li>
+            <li>Forgot-password emails</li>
+            <li>Direct import of presentations, docs, PDFs and text, converted into flashcards</li>
+            <li>A docs and PDF reviewer</li>
+            <li>Search and filters</li>
+            <li>A progressive web app</li>
+        </ul>
+    </section>
+
+    <p class="pb-4 text-center text-sm text-txt-secondary">Developed by Joseph Canzana</p>
 </div>
 {% endblock %}

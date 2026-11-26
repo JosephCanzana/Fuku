@@ -5,7 +5,7 @@ Sign up
 {% endblock %}
 
 {% block content %}
-<div class="w-full h-full flex items-center justify-center flex-col">
+<div class="w-full flex items-center justify-center flex-col">
     <form class="card-primary flex w-full max-w-md flex-col gap-4" method="post" action="">
         {% csrf_token %}
         <div class="flex w-full justify-center items-center flex-col">
@@ -30,7 +30,16 @@ Sign up
         </div>
         <div>
             <label class="text-txt-primary" for="id_password">Password</label>
-            <input name="password" class="input-primary" minlength="8" placeholder="Min. 8 characters" id="id_password" type="password" required>
+
+            <div class="relative">
+                <input name="password" class="input-primary pr-16" minlength="8" placeholder="Min. 8 characters"
+                    id="id_password" type="password" required>
+                <button type="button" data-toggle-password="id_password" aria-pressed="false"
+                        class="absolute inset-y-0 right-0 px-3 text-sm text-txt-secondary hover:text-txt-primary">
+                    Show
+                </button>
+            </div>
+
             {% for error in form.password.errors %}
                 <p class="mx-2 text-sm text-danger">{{ error }}</p>
             {% endfor %}
